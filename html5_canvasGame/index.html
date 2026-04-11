@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sci-Fi Quiz</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #050a0f;
+            --surface: #0b1520;
+            --border: #1a3a5c;
+            --accent: #00c8ff;
+            --accent2: #ff6b35;
+            --correct: #00e87a;
+            --wrong: #ff3c5a;
+            --text: #c8dff0;
+            --muted: #4a6a8a;
+            --font-head: 'Orbitron', monospace;
+            --font-body: 'Share Tech Mono', monospace;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font-body);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            overflow-x: hidden;
+        }
+
+        /* Starfield background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, rgba(200, 223, 240, 0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, rgba(200, 223, 240, 0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 50% 10%, rgba(200, 223, 240, 0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 70% 80%, rgba(200, 223, 240, 0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 85% 35%, rgba(200, 223, 240, 0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 15% 75%, rgba(200, 223, 240, 0.2) 0%, transparent 100%),
+                radial-gradient(1px 1px at 92% 55%, rgba(200, 223, 240, 0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 42% 88%, rgba(200, 223, 240, 0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 45%, rgba(200, 223, 240, 0.2) 0%, transparent 100%),
+                radial-gradient(1px 1px at 78% 15%, rgba(200, 223, 240, 0.5) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #app {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 720px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .title-label {
+            font-family: var(--font-body);
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        h1 {
+            font-family: var(--font-head);
+            font-size: clamp(1.4rem, 5vw, 2.2rem);
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 30px rgba(0, 200, 255, 0.4);
+        }
+
+        /* HUD bar */
+        #hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            border: 0.5px solid var(--border);
+            background: var(--surface);
+            margin-bottom: 1.5rem;
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+        }
+
+        #hud span {
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Card */
+        .card {
+            background: var(--surface);
+            border: 0.5px solid var(--border);
+            padding: 2rem;
+            position: relative;
+        }
+
+        /* Corner accents */
+        .card::before,
+        .card::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: var(--accent);
+            border-style: solid;
+        }
+
+        .card::before {
+            top: -1px;
+            left: -1px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .card::after {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 2px 2px 0;
+        }
+
+        /* Start screen */
+        #startScreen {
+            text-align: center;
+        }
+
+        .level-badge {
+            display: inline-block;
+            font-size: 10px;
+            letter-spacing: 0.25em;
+            color: var(--accent);
+            border: 0.5px solid var(--accent);
+            padding: 4px 12px;
+            margin-bottom: 1.25rem;
+            text-transform: uppercase;
+        }
+
+        .level-title {
+            font-family: var(--font-head);
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            color: #fff;
+            margin-bottom: 0.75rem;
+        }
+
+        .level-desc {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        #drawBtn {
+            display: inline-block;
+            font-family: var(--font-head);
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            color: var(--bg);
+            background: var(--accent);
+            border: none;
+            padding: 14px 36px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.15s, transform 0.1s;
+        }
+
+        #drawBtn:hover {
+            background: #33d4ff;
+        }
+
+        #drawBtn:active {
+            transform: scale(0.97);
+        }
+
+        #drawBtn:disabled {
+            background: var(--muted);
+            cursor: default;
+        }
+
+        /* Question screen */
+        #questionScreen {
+            display: none;
+        }
+
+        .q-meta {
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            margin-bottom: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .q-meta .q-id {
+            color: var(--accent2);
+        }
+
+        #questionText {
+            font-family: var(--font-body);
+            font-size: 15px;
+            line-height: 1.75;
+            color: #fff;
+            margin-bottom: 1.75rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 0.5px solid var(--border);
+        }
+
+        /* Choices */
+        #choicesContainer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        .choice-btn {
+            display: block;
+            width: 100%;
+            background: transparent;
+            border: 0.5px solid var(--border);
+            color: var(--text);
+            font-family: var(--font-body);
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: left;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: border-color 0.15s, color 0.15s, background 0.15s;
+            position: relative;
+        }
+
+        .choice-btn::before {
+            content: attr(data-label);
+            display: inline-block;
+            width: 22px;
+            color: var(--accent);
+            font-size: 11px;
+            flex-shrink: 0;
+        }
+
+        .choice-btn:not(:disabled):hover {
+            border-color: var(--accent);
+            color: #fff;
+            background: rgba(0, 200, 255, 0.05);
+        }
+
+        .choice-btn.correct {
+            border-color: var(--correct);
+            color: var(--correct);
+            background: rgba(0, 232, 122, 0.07);
+        }
+
+        .choice-btn.wrong {
+            border-color: var(--wrong);
+            color: var(--wrong);
+            background: rgba(255, 60, 90, 0.07);
+        }
+
+        .choice-btn:disabled {
+            cursor: default;
+        }
+
+        /* Feedback */
+        #feedback {
+            display: none;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            padding: 10px 14px;
+            margin-bottom: 1.25rem;
+            border-left: 2px solid;
+        }
+
+        #feedback.feedback-correct {
+            color: var(--correct);
+            border-color: var(--correct);
+            background: rgba(0, 232, 122, 0.05);
+        }
+
+        #feedback.feedback-wrong {
+            color: var(--wrong);
+            border-color: var(--wrong);
+            background: rgba(255, 60, 90, 0.05);
+        }
+
+        /* Next button */
+        #nextBtn {
+            display: none;
+            font-family: var(--font-head);
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            background: transparent;
+            border: 0.5px solid var(--accent);
+            padding: 10px 24px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        #nextBtn:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        /* Progress bar */
+        #progressWrap {
+            margin-top: 1.5rem;
+            height: 2px;
+            background: var(--border);
+        }
+
+        #progressBar {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+
+        /* End screen */
+        #endScreen {
+            display: none;
+            text-align: center;
+        }
+
+        .end-title {
+            font-family: var(--font-head);
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            color: var(--accent);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(0, 200, 255, 0.5);
+        }
+
+        .end-score {
+            font-size: 40px;
+            font-family: var(--font-head);
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+
+        .end-label {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        #restartBtn {
+            font-family: var(--font-head);
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            color: var(--bg);
+            background: var(--accent2);
+            border: none;
+            padding: 12px 32px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.15s;
+        }
+
+        #restartBtn:hover {
+            background: #ff8c60;
+        }
+
+        footer {
+            margin-top: 2rem;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--muted);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="app">
+        <header>
+            <p class="title-label">DTC 478 &mdash; 2026</p>
+            <h1>Sci-Fi Quiz</h1>
+        </header>
+
+        <!-- HUD: level + remaining count -->
+        <div id="hud">
+            <div>LEVEL &nbsp;<span id="hudLevel">—</span></div>
+            <div>CATEGORY &nbsp;<span id="hudCategory">—</span></div>
+            <div>REMAINING &nbsp;<span id="hudRemaining">—</span></div>
+        </div>
+
+        <!-- Start / transition screen -->
+        <div class="card" id="startScreen">
+            <div class="level-badge" id="levelBadge">Level 1</div>
+            <h2 class="level-title" id="levelTitle">Universe</h2>
+            <p class="level-desc" id="levelDesc">Five questions about the scale, structure, and history of the universe.
+            </p>
+            <button id="drawBtn" onclick="startOrDraw()">Begin</button>
+        </div>
+
+        <!-- Question screen -->
+        <div class="card" id="questionScreen">
+            <div class="q-meta">
+                <span id="qCategory"></span>
+                <span class="q-id" id="qId"></span>
+            </div>
+            <p id="questionText"></p>
+            <div id="choicesContainer"></div>
+            <div id="feedback"></div>
+            <button id="nextBtn" onclick="generateQuestion()">Next Question</button>
+            <div id="progressWrap">
+                <div id="progressBar"></div>
+            </div>
+        </div>
+
+        <!-- End screen -->
+        <div class="card" id="endScreen">
+            <p class="end-title">Quiz Complete</p>
+            <div class="end-score" id="endScore">—</div>
+            <p class="end-label">CORRECT ANSWERS</p>
+            <button id="restartBtn" onclick="restartGame()">Restart</button>
+        </div>
+    </div>
+
+    <footer>&copy; Tevin Lu &mdash; DTC 478 &mdash; 2026</footer>
+
+    <script>
+        // CHAT LOG:
+        // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
+        // Logic Steps:
+        // 0. Fetch questions.json on load
+        // 1. Levels are ordered — each maps to a category key in the JSON
+        // 2. startOrDraw() either initialises level 1 or draws the next question
+        // 3. loadLevel() shuffles that category's questions into drawPile
+        // 4. generateQuestion() pops from drawPile; when empty, calls advanceLevel()
+        // 5. advanceLevel() loads the next level or calls endGame() when all are done
+        // 6. Score is tracked throughout and shown on the end screen
+
+        // --- State ---
+        let questions = null;
+        let currentQuestion = null;
+        let drawPile = [];
+        let currentLevelIndex = -1;  // -1 = not started yet
+        let score = 0;
+        let totalAnswered = 0;
+        let levelSize = 0;    // how many questions were in this level at load time
+        let gameStarted = false;
+
+        // --- Level definitions ---
+        // name:  must match a key in questions.json
+        // title: display name shown on the transition card
+        // desc:  short blurb shown before the level starts
+        const levels = [
+            {
+                name: "universe",
+                title: "The Universe",
+                desc: "Five questions on the scale, structure, and deep history of the cosmos."
+            },
+            {
+                name: "gameTheory",
+                title: "Game Theory",
+                desc: "Five questions on strategic decision-making, cooperation, and feedback."
+            },
+            {
+                name: "fermiParadox",
+                title: "The Fermi Paradox",
+                desc: "Five questions on the silence of the universe and what it might mean."
+            },
+            {
+                name: "ai",
+                title: "Artificial Intelligence",
+                desc: "Five questions on machine intelligence, consciousness, and the posthuman."
+            },
+            {
+                name: "philosophy",
+                title: "Philosophy",
+                desc: "Five questions on determinism, reality, mind, and the nature of existence."
+            }
+        ];
+
+        // --- Fetch questions.json ---
+        fetch("/data/questions.json")
+            .then(r => r.json())
+            .then(data => {
+                questions = data;
+                console.log("Questions loaded:", questions);
+            })
+            .catch(err => console.error("Failed to load questions.json:", err));
+
+        // --- Fisher-Yates shuffle (returns a new array, does not mutate) ---
+        function shuffle(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // --- Button on the start/transition screen ---
+        function startOrDraw() {
+            if (!questions) { console.log("JSON not loaded yet"); return; }
+
+            if (!gameStarted) {
+                // First press — initialise level 0
+                score = 0;
+                totalAnswered = 0;
+                currentLevelIndex = 0;
+                gameStarted = true;
+                loadLevel(currentLevelIndex);
+            }
+
+            generateQuestion();
+        }
+
+        // --- Shuffle the current level's questions into drawPile ---
+        function loadLevel(index) {
+            const level = levels[index];
+            const pool = questions[level.name];
+
+            if (!pool || pool.length === 0) {
+                console.warn("No questions for level:", level.name);
+                return;
+            }
+
+            drawPile = shuffle(pool);
+            levelSize = pool.length;
+            updateHUD();
+            console.log("Loaded level:", level.name, "| Questions:", drawPile.length);
+        }
+
+        // --- Pop one question from the draw pile ---
+        function generateQuestion() {
+            if (drawPile.length === 0) {
+                advanceLevel();
+                return;
+            }
+
+            currentQuestion = drawPile.pop();
+            console.log("Drew:", currentQuestion.id, "| Remaining:", drawPile.length);
+            renderQuestion();
+        }
+
+        // --- Render question and choices ---
+        function renderQuestion() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("questionScreen").style.display = "block";
+            document.getElementById("endScreen").style.display = "none";
+
+            const level = levels[currentLevelIndex];
+            document.getElementById("qCategory").textContent = level.title.toUpperCase();
+            document.getElementById("qId").textContent = currentQuestion.id.toUpperCase();
+            document.getElementById("questionText").textContent = currentQuestion.question;
+
+            document.getElementById("feedback").style.display = "none";
+            document.getElementById("feedback").textContent = "";
+            document.getElementById("nextBtn").style.display = "none";
+
+            buildChoices();
+            updateHUD();
+            updateProgress();
+        }
+
+        // --- Inject A/B/C/D choice buttons ---
+        const LABELS = ["A", "B", "C", "D"];
+
+        function buildChoices() {
+            const container = document.getElementById("choicesContainer");
+            container.innerHTML = "";
+
+            currentQuestion.choices.forEach(function (choiceText, index) {
+                const btn = document.createElement("button");
+                btn.textContent = LABELS[index] + ".  " + choiceText;
+                btn.classList.add("choice-btn");
+                btn.setAttribute("data-index", index);
+                btn.setAttribute("data-label", LABELS[index]);
+                btn.onclick = function () { handleChoice(index); };
+                container.appendChild(btn);
+            });
+        }
+
+        // --- Handle answer selection ---
+        function handleChoice(selectedIndex) {
+            const correctIndex = currentQuestion.correct;
+            const buttons = document.querySelectorAll(".choice-btn");
+            totalAnswered++;
+
+            buttons.forEach(function (btn) {
+                btn.disabled = true;
+                const i = parseInt(btn.getAttribute("data-index"));
+                if (i === correctIndex) { btn.classList.add("correct"); }
+                else if (i === selectedIndex) { btn.classList.add("wrong"); }
+            });
+
+            const feedbackEl = document.getElementById("feedback");
+            feedbackEl.style.display = "block";
+
+            if (selectedIndex === correctIndex) {
+                score++;
+                feedbackEl.textContent = "// CORRECT";
+                feedbackEl.className = "feedback-correct";
+            } else {
+                feedbackEl.textContent = "// INCORRECT — correct answer highlighted above";
+                feedbackEl.className = "feedback-wrong";
+            }
+
+            const isLastInLevel = drawPile.length === 0;
+            const nextBtn = document.getElementById("nextBtn");
+            nextBtn.textContent = isLastInLevel ? "Next Level →" : "Next Question →";
+            nextBtn.style.display = "block";
+        }
+
+        // --- Move to next level, or end game ---
+        function advanceLevel() {
+            currentLevelIndex++;
+
+            if (currentLevelIndex >= levels.length) {
+                endGame();
+                return;
+            }
+
+            loadLevel(currentLevelIndex);
+            showTransition();
+        }
+
+        // --- Show the between-level card ---
+        function showTransition() {
+            document.getElementById("questionScreen").style.display = "none";
+            document.getElementById("startScreen").style.display = "block";
+
+            const level = levels[currentLevelIndex];
+            document.getElementById("levelBadge").textContent = "Level " + (currentLevelIndex + 1);
+            document.getElementById("levelTitle").textContent = level.title;
+            document.getElementById("levelDesc").textContent = level.desc;
+            document.getElementById("drawBtn").textContent = "Begin Level →";
+            document.getElementById("drawBtn").disabled = false;
+        }
+
+        // --- Show the end screen ---
+        function endGame() {
+            gameStarted = false;
+            document.getElementById("questionScreen").style.display = "none";
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("endScreen").style.display = "block";
+            document.getElementById("endScore").textContent =
+                score + " / " + totalAnswered;
+            updateHUD();
+        }
+
+        // --- Restart from level 1 ---
+        function restartGame() {
+            score = 0;
+            totalAnswered = 0;
+            currentLevelIndex = 0;
+            drawPile = [];
+            gameStarted = false;
+
+            document.getElementById("endScreen").style.display = "none";
+            document.getElementById("startScreen").style.display = "block";
+
+            document.getElementById("levelBadge").textContent = "Level 1";
+            document.getElementById("levelTitle").textContent = levels[0].title;
+            document.getElementById("levelDesc").textContent = levels[0].desc;
+            document.getElementById("drawBtn").textContent = "Begin";
+            document.getElementById("drawBtn").disabled = false;
+
+            updateHUD();
+            document.getElementById("progressBar").style.width = "0%";
+        }
+
+        // --- Update the HUD bar ---
+        function updateHUD() {
+            const levelNum = currentLevelIndex >= 0 ? currentLevelIndex + 1 : "—";
+            const catName = currentLevelIndex >= 0 && currentLevelIndex < levels.length
+                ? levels[currentLevelIndex].title.toUpperCase()
+                : "—";
+            const remaining = drawPile.length > 0 ? drawPile.length : "—";
+
+            document.getElementById("hudLevel").textContent = levelNum;
+            document.getElementById("hudCategory").textContent = catName;
+            document.getElementById("hudRemaining").textContent = remaining;
+        }
+
+        // --- Update the progress bar (within current level) ---
+        function updateProgress() {
+            if (levelSize === 0) return;
+            const answered = levelSize - drawPile.length; // includes current question
+            const pct = (answered / levelSize) * 100;
+            document.getElementById("progressBar").style.width = pct + "%";
+        }
+
+        // --- Set start screen to level 1 on page load ---
+        window.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("levelBadge").textContent = "Level 1";
+            document.getElementById("levelTitle").textContent = levels[0].title;
+            document.getElementById("levelDesc").textContent = levels[0].desc;
+        });
+    </script>
+
+</body>
+
+</html>
