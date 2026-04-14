@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Space Invaders</title>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            color: white;
+            overflow: hidden;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: black;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="game" width="600" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById("game");
+        const ctx = canvas.getContext("2d");
+
+        const keys = {};
+        document.addEventListener("keydown", e => keys[e.code] = true);
+        document.addEventListener("keyup", e => keys[e.code] = false);
+
+        const player = {
+            x: canvas.width / 2,
+            y: canvas.height - 30,
+            width: 40,
+            height: 10,
+            speed: 4
+        };
+
+        let bullets = [];
+        let invaders = [];
+        let invaderDir = 1;
+        let invaderSpeed = 0.5;
+        let stepDown = false;
+
+        function createInvaders() {
+            const rows = 4;
+            const cols = 8;
+            const spacingX = 50;
+            const spacingY = 30;
+            const offsetX = 60;
+            const offsetY = 40;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    invaders.push({
+                        x: offsetX + c * spacingX,
+                        y: offsetY + r * spacingY,
+                        width: 24,
+                        height: 16,
+                        alive: true
+                    });
+                }
+            }
+        }
+        createInvaders();
+
+        let canShoot = true;
+        document.addEventListener("keydown", e => {
+            if (e.code === "Space" && canShoot) {
+                bullets.push({
+                    x: player.x,
+                    y: player.y - player.height / 2,
+                    vy: -6
+                });
+                canShoot = false;
+            }
+        });
+        document.addEventListener("keyup", e => {
+            if (e.code === "Space") canShoot = true;
+        });
+
+        function updatePlayer() {
+            if (keys["ArrowLeft"]) player.x -= player.speed;
+            if (keys["ArrowRight"]) player.x += player.speed;
+            player.x = Math.max(player.width / 2, Math.min(canvas.width - player.width / 2, player.x));
+        }
+
+        function updateBullets() {
+            bullets.forEach(b => b.y += b.vy);
+            bullets = bullets.filter(b => b.y > 0);
+        }
+
+        function updateInvaders() {
+            let hitEdge = false;
+
+            invaders.forEach(inv => {
+                if (!inv.alive) return;
+                inv.x += invaderDir * invaderSpeed;
+                if (inv.x < 20 || inv.x > canvas.width - 20) hitEdge = true;
+            });
+
+            if (hitEdge) {
+                invaderDir *= -1;
+                invaders.forEach(inv => {
+                    if (!inv.alive) return;
+                    inv.y += 30;
+                });
+            }
+        }
+
+        function checkCollisions() {
+            bullets.forEach((b, bi) => {
+                invaders.forEach((inv, ii) => {
+                    if (!inv.alive) return;
+                    if (b.x > inv.x - inv.width / 2 &&
+                        b.x < inv.x + inv.width / 2 &&
+                        b.y > inv.y - inv.height / 2 &&
+                        b.y < inv.y + inv.height / 2) {
+                        inv.alive = false;
+                        bullets.splice(bi, 1);
+                    }
+                });
+            });
+        }
+
+        function drawPlayer() {
+            ctx.fillStyle = "white";
+            ctx.fillRect(player.x - player.width / 2, player.y - player.height / 2, player.width, player.height);
+        }
+
+        function drawBullets() {
+            ctx.fillStyle = "white";
+            bullets.forEach(b => {
+                ctx.fillRect(b.x - 2, b.y - 6, 4, 8);
+            });
+        }
+
+        function drawInvaders() {
+            ctx.fillStyle = "lime";
+            invaders.forEach(inv => {
+                if (!inv.alive) return;
+                ctx.fillRect(inv.x - inv.width / 2, inv.y - inv.height / 2, inv.width, inv.height);
+            });
+        }
+
+        function loop() {
+            updatePlayer();
+            updateBullets();
+            updateInvaders();
+            checkCollisions();
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlayer();
+            drawBullets();
+            drawInvaders();
+
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
+</body>
+
+</html>
