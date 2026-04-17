@@ -1,6 +1,3 @@
-const canvas = document.getElementById("spaceStage");
-const ctx = canvas.getContext("2d");
-
 const keys = {};
 document.addEventListener("keydown", e => keys[e.code] = true);
 document.addEventListener("keyup", e => keys[e.code] = false);
@@ -52,15 +49,3 @@ function drawBullets() {
         ctx.fillRect(b.x - 2, b.y - 6, 4, 8);
     });
 }
-
-function loop() {
-    updatePlayer();
-    updateBullets();
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPlayer();
-    drawBullets();
-
-    requestAnimationFrame(loop);
-}
-loop();
