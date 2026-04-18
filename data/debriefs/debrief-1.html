@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Debrief 1</title>
+    <style>
+        body {
+            margin: auto;
+            overflow: hidden;
+        }
+
+        #wrapper {
+            max-width: 80%;
+            max-width: 1000px;
+            margin: auto;
+            border-radius: 15px;
+            background: rgba(11, 76, 94, 0.85);
+            max-height: 100dvh;
+        }
+
+        h1 {
+            font-size: 5em;
+            font-family: monospace;
+            display: flex;
+            text-align: left;
+            padding-left: 10%;
+            padding-top: 3%;
+            margin-bottom: 0;
+            margin-top: 0;
+            color: white;
+            z-index: 10;
+        }
+
+        #debrief-Container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #visuals-Debrief {
+            width: 50%;
+            text-align: center;
+            margin-left: 3%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #visuals-Debrief video {
+            max-width: 90%;
+            margin: 3%;
+        }
+
+        #visuals-Debrief button {
+            text-align: center;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            background-color: #FF0000;
+            border-radius: 80px;
+            padding: 2.5%;
+            font-family: monospace;
+            font-size: 1.5em;
+            color: white;
+            margin-bottom: 5%;
+        }
+
+
+        #visuals-Debrief button:hover {
+            background-color: #00ffc8;
+        }
+
+        #image-Container {
+            width: 45%;
+            display: flex;
+            object-fit: contain;
+        }
+
+        #image-Container img {
+            max-width: 100%;
+            margin: 3%;
+        }
+
+        #text-Debrief {
+            width: 50%;
+            margin: auto;
+            margin: 3%;
+            margin-top: -5%;
+            padding-left: 40px;
+            padding-right: 40px;
+            border-radius: 6px;
+            background: #64BBD3;
+        }
+
+        #text-Debrief h2 {
+            color: white;
+            text-align: center;
+        }
+
+        #text-Debrief h2 {
+            font-size: 1.5em;
+        }
+
+        #text-Debrief a {
+            cursor: pointer;
+            color: #8A38F5;
+            font-weight: bold;
+            text-decoration: underline dotted;
+        }
+
+        #additional-Info {
+            position: absolute;
+            z-index: 20;
+            margin: auto;
+            font-size: 1em;
+            pointer-events: none;
+        }
+
+        #additional-Info p {
+            margin: 0;
+            position: fixed;
+            width: 40%;
+            border-radius: 12px;
+            padding: 1%;
+            background: #8A38F5;
+            color: white;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        #additional-Info p.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        #additional-Info p:first-of-type {
+            top: 32%;
+            left: 30%;
+        }
+
+        #additional-Info p:nth-of-type(2) {
+            top: 36%;
+            left: 30%;
+        }
+
+        #additional-Info p:nth-of-type(3) {
+            top: 44%;
+            left: 30%;
+        }
+
+        #additional-Info p:nth-of-type(4) {
+            top: 51%;
+            left: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <h1>Mission Debrief: <br> Boss #1</h1>
+        <div id="debrief-Container">
+            <div id="visuals-Debrief">
+                <video autoplay loop muted src="/video/gojira.mp4"></video>
+                <div id="image-Container">
+                    <img src="/images/industrial1.jpg" alt="helicopter flying over destroyed building">
+                    <img src="/images/industrial2.jpg" alt="polluted earth apocalypse landscape">
+                </div>
+                <button>Mission <br> Confirm?</button>
+            </div>
+
+            <div id="text-Debrief">
+                <h2>Essential Information:</h2>
+                <p>Based off of observations from the Hubble Space Telescope, it is estimated that there are
+                    approximately <b>2 trillion galaxies</b> in the observable universe. When observing distant objects
+                    in the universe, we are actually observing those
+                    objects as they
+                    appeared in the
+                    <a href="#" data-info="info-1">past</a>.
+                </p>
+                <p>The <a href="#" data-info="info-2">Goldilocks zone</a> in our solar system means that Earth exists
+                    within a habitable zone around our sun, where conditions are just right for liquid water to exist on
+                    the planet's surface.</p>
+                <p>Earth and its <a href="#" data-info="info-3">Mass Extinctions</a> can be broken down into the
+                    Ordovician, Devonian, Permian, Triassic, and Cretaceous.</p>
+                <p>Although not technically considered a mass extinction event, the
+                    <a href="#" data-info="info-4">Great Oxidation Event</a> occurred during the Proterozoic when
+                    Photosynthetic life began to rapidly produce Oxygen.
+                </p>
+            </div>
+
+            <div id="additional-Info">
+                <p id="info-1">The observable universe is a vast space full of endless possibilities. Every day new
+                    discoveries are being found by Scientists, as we continue to discover more of what the universe
+                    contains. Due to large distances between galaxies and the finite speed of light, we are unable to
+                    directly observe the universe in real time. When observing distant objects in the universe, we are
+                    actually observing those objects as they appeared in the past. The further away they are, the
+                    further back in time they are observed.</p>
+                <p id="info-2">The Earth is located in a fascinating zone called the 'Goldilocks zone' in our solar
+                    system. This means that it exists within a habitable zone around our sun, where conditions are just
+                    right for liquid water to exist on the planet's surface. Water is essential in facilitating a wide
+                    variety of chemical reactions necessary for biological life. Although it is considered plausible for
+                    life forms to center around methane for example.</p>
+                <p id="info-3">Our planet has existed for over four and a half billion years. Since then, life has
+                    undergone a variety of changes, with mass extinction events being one of them. Mass extinction
+                    events typically occur when the conditions for most of life on earth become inhospitable for most
+                    species living on it at a given geological time period. These mass extinctions can be broken down
+                    into the Ordovician, Devonian, Permian, Triassic, and Cretaceous. The Cretaceous mass extinction
+                    event is well known for being responsible for the extinction of the dinosaurs.</p>
+                <p id="info-4">Although not technically considered a mass extinction event, the great Oxidation event
+                    occurred during the Proterozoic when Photosynthetic life began to rapidly produce Oxygen levels
+                    that were toxic to anaerobic microbial life that constituted most life at the time. This was before
+                    most life as we knew it existed, early in Earth's history.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        const links = document.querySelectorAll('#text-Debrief a[data-info]');
+        const allBoxes = document.querySelectorAll('#additional-Info p');
+
+        function hideAll() {
+            allBoxes.forEach(box => box.classList.remove('visible'));
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation(); // prevent the document click from immediately closing it
+
+                const targetId = link.dataset.info;
+                const targetBox = document.getElementById(targetId);
+                const isAlreadyVisible = targetBox.classList.contains('visible');
+
+                hideAll();
+
+                if (!isAlreadyVisible) {
+                    targetBox.classList.add('visible');
+                }
+            });
+        });
+
+        // Clicking an open info box keeps it open
+        allBoxes.forEach(box => {
+            box.addEventListener('click', e => e.stopPropagation());
+        });
+
+        // Clicking anywhere else closes all boxes
+        document.addEventListener('click', () => hideAll());
+    </script>
+</body>
+
+</html>
