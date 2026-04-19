@@ -7,8 +7,27 @@ const player = {
     y: canvas.height - 30,
     width: 40,
     height: 10,
+
     speed: 4,
-    lastShotTime: 0
+    lastShotTime: 0,
+
+    playerHealth: 5,
+    invincible: false,
+    invincibleStop: 0,
+
+    takeDamage(amount) {
+        if (this.invincible) return;
+
+        this.playerHealth -= amount;
+
+        this.invincible = true;
+        this.invincibleStop = Date.now() + 3000;
+
+        if (this.playerHealth <= 0) {
+            this.playerHealth = 0;
+            console.log("You died. GAME OVER");
+        }
+    },
 };
 
 let bullets = [];
@@ -31,6 +50,10 @@ function updatePlayer() {
     if (keys["ArrowLeft"]) player.x -= player.speed;
     if (keys["ArrowRight"]) player.x += player.speed;
     player.x = Math.max(player.width / 2, Math.min(canvas.width - player.width / 2, player.x));
+
+    if (player.invincible && Date.now() > player.invincibleStop) {
+        player.invincible = false;
+    }
 }
 
 function updateBullets() {
@@ -39,8 +62,14 @@ function updateBullets() {
 }
 
 function drawPlayer() {
+    if (player.invincible) {
+        const blink = Math.floor(Date.now() / 100) % 2;
+        if (blink === 0) return;
+    }
+
     ctx.fillStyle = "white";
     ctx.fillRect(player.x - player.width / 2, player.y - player.height / 2, player.width, player.height);
+
 }
 
 function drawBullets() {

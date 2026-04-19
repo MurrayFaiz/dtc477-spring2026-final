@@ -7,7 +7,8 @@ function mainLoop() {
     updateAsteroids();
 
     //Check Collision
-    checkCollisions();
+    asteroidsCollisions();
+    playerCollisions();
 
     //Clear Canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);

@@ -13,7 +13,7 @@ function spawnAsteroid() {
 
     const stage = "large";
     const baseSize = 40;
-    const variation = 8;
+    const variation = 5;
     asteroids.push({
         x, y,
         vx: Math.cos(angle) * speed,
@@ -23,14 +23,23 @@ function spawnAsteroid() {
     });
 }
 
-for (let i = 0; i < 6; i++) spawnAsteroid();
+for (let i = 0; i < 3; i++) spawnAsteroid();
 console.log("Astroids:", asteroids);
 
 function wrap(obj) {
     if (obj.x < 0) obj.x += canvas.width;
     if (obj.x > canvas.width) obj.x -= canvas.width;
-    if (obj.y < 0) obj.y += canvas.height;
-    if (obj.y > canvas.height) obj.y -= canvas.height;
+}
+
+function bounce(obj) {
+    if (obj.y - obj.radius < 0) {
+        obj.y = obj.radius;
+        obj.vy = obj.vy * -1;
+    }
+    if (obj.y + obj.radius > canvas.height) {
+        obj.y = canvas.height - obj.radius;
+        obj.vy = obj.vy * -1;
+    }
 }
 
 function updateAsteroids() {
@@ -38,69 +47,7 @@ function updateAsteroids() {
         a.x += a.vx;
         a.y += a.vy;
         wrap(a);
-    });
-}
-
-function checkCollisions() {
-    let hits = [];
-
-    // Detect collision
-    bullets.forEach((b, bi) => {
-        asteroids.forEach((a, ai) => {
-            const dx = a.x - b.x;
-            const dy = a.y - b.y;
-            const dist = Math.hypot(dx, dy);
-
-            if (!hits.some(h => h.ai === ai)) {
-                hits.push({ bi, ai });
-            }
-        });
-    });
-
-    // Split asteroids
-    hits.reverse().forEach(hit => {
-        const b = bullets[hit.bi];
-        const a = asteroids[hit.ai];
-
-        if (!a || !b) return;
-
-        bullets.splice(hit.bi, 1);
-        asteroids.splice(hit.ai, 1);
-
-        if (a.stage !== "small") {
-            let nextStage = null;
-
-            if (a.stage === "large") nextStage = "medium";
-            else if (a.stage === "medium") nextStage = "small";
-
-            for (let i = 0; i < 2; i++) {
-                const angle = Math.random() * Math.PI * 2;
-
-                let baseSpeed = 0;
-                let baseSize = 0;
-
-                if (nextStage === "medium") {
-                    baseSpeed = 1.2;
-                    baseSize = 24
-                }
-                if (nextStage === "small") {
-                    baseSpeed = 1.8;
-                    baseSize = 12;
-                }
-
-                const speed = baseSpeed + Math.random() * 0.4;
-                const radius = baseSize + (Math.random() * 4 - 2);
-
-                asteroids.push({
-                    x: a.x,
-                    y: a.y,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    stage: nextStage,
-                    radius: radius
-                });
-            }
-        }
+        bounce(a);
     });
 }
 
