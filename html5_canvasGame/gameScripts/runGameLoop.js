@@ -5,6 +5,7 @@ function mainLoop() {
 
     //Update Asteroids
     updateAsteroids();
+    updateAliens();
 
     //Check Collision
     asteroidsCollisions();
@@ -19,6 +20,7 @@ function mainLoop() {
 
     //Draw Asteroids
     drawAsteroids();
+    drawAliens();
 
     requestAnimationFrame(mainLoop);
 }

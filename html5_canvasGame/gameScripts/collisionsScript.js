@@ -61,6 +61,7 @@ function asteroidsCollisions() {
     });
 }
 
+
 function playerCollisions() {
     const playerRadius = (player.width + player.height) / 4
 
@@ -73,4 +74,15 @@ function playerCollisions() {
             player.takeDamage(1);
         }
     });
+
+    /*aliens.forEach(a => {
+        const dx = a.x - player.x;
+        const dy = a.y - player.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < playerRadius + atl.radius) {
+            player.takeDamage(1);
+        }
+    });*/
+
 }
