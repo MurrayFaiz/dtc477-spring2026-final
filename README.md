@@ -1,64 +1,157 @@
-Welcome to the DTC 477 HTML5 Canvas Game - GitHub repository!
-Please refer to this document for project organization and collaboration guidelines, as well as additional information.
+# DTC 477 HTML5 Canvas Game
 
-!!!Project Overview:
+Welcome to the **DTC 477 HTML5 Canvas Game** GitHub repository!  
+Please refer to this document for project organization, collaboration guidelines, and additional information.
 
-  - Our game is a blend between a classical arcade bullet shooter and an M.U.D PC game, with a blend of trivia. 
+---
 
-  - The roles of the team members are:
+## 📌 Project Overview
 
-    Tevin: Text content, quiz/question arrays
+- Our game is a blend between a classical arcade **bullet shooter** and an **M.U.D PC game**, combined with trivia elements.
 
-    Jackson: Graphical elements (including style guide)
+### 👥 Team Roles
+- **Tevin** — Text content, quiz/question arrays  
+- **Jackson** — Graphical elements (including style guide)  
+- **Gabriel** — Player & enemy movements  
 
-    Gabriel: Player & enemy movements
+---
 
-!!!Game Structure & Systems:
+## 🎮 Game Structure & Systems
 
-  - The game flow will go as follows:
+### Game Flow
 
-    * Start Screen with the title and start button
-    * Debreef Stage: A large text box will appear with information relating to the upcoming question, and then the player is prompted to continue to the game
-    * Enemy Stage: The player takes control of a spaceship and has to shoot at waves of enemies. They will all have different properties and behaviors.
-    * Boss Stage: After the enemies are killed, a boss appears (and a couple of respawning enemies).
-    * Once completing the first stage of the boss, the player returns to the debreefing stage, and continues the loop several more times.
+1. **Start Screen**
+   - Title and start button
 
-  - Shared logic structures include the player movement (which includes left + right directions and shooting), the enemy "AI", and boss "AI".
+2. **Debrief Stage**
+   - A large text box appears with information about the upcoming question  
+   - Player is prompted to continue
 
-!!!Project Organization:
+3. **Enemy Stage**
+   - Player controls a spaceship
+   - Must shoot waves of enemies with different behaviors and properties
 
-  - For this repository, we will be using the basic GitHub workflow for setting up the different branches of the project. You'll have access to create, clone, and merge any branches freely, but I highly encourage you to discuss any major actions with the rest of the group first.
-  
-  - When pushing, please follow this formula...
+4. **Boss Stage**
+   - Boss appears after enemies are defeated
+   - Includes respawning enemies
 
-      dtc477_branchName_lastnameFirstInitial_currentDate[MM/DD/YYYY]
-    
-      Ex: dtc477_main_murrG_04/02/2026
-    
-      While not necessary, a short description of the pushes you make would be helpful for quickly reviewing the changes and could even assist with debugging.
+5. **Loop Progression**
+   - After completing the first phase of the boss:
+     - Return to Debrief Stage
+     - Repeat loop multiple times
 
-  - Just a reminder to always fetch/pull first before making any changes to the code, even if you don't push it.
+### Shared Systems
 
-  - The files are already organized, so don't worry about that. CSS goes with the CSS folder, and JS goes in JS folder. HTML stays outside in the repository folder.
+- Player movement (left/right + shooting)
+- Enemy AI
+- Boss AI
 
-  - When naming functions or ID's in the code, use camelCase (first word is lowercase, every following word starts with Uppercase)
+---
 
-!!!Further Mechanic Explanation:
+## 📁 Project Organization
 
-  - The players movement is vertically locked. They can only fire at a slow rate. Their will be a health bar, but no lives system (for now)
+- We will follow a **standard GitHub workflow**:
+  - Create, clone, and merge branches freely
+  - **Discuss major changes before implementing**
 
-  - Enemies can come in a variety, and are open to any ideas. Basics would include zigzag pathways, and ones with projectiles.
+### 🔀 Branch Naming Convention
 
-  - Here is how the boss will function:
+```
+dtc477_branchName_lastnameFirstInitial_currentDate[MM/DD/YYYY]
+```
 
-    * On start of boss stage, it will appear at the top of the screen.
-    * It will slowly make its way down, sparsely sending out projectiles.
-    * On it will be 4 weak points (each of which is color coded)
-    * The question will be displayed at the bottom of the screen, and below that will be 4 possible answers, each of which is rando,ly set to one of 4 colors (corresponding with the weak points).
-    * The players goal is to shoot the correct color to damage the boss.
-    * Weak point colors switch after a couple seconds to add challenge.
-    * If the player hits the wrong stop, the boss drops down faster.
+**Example:**
+```
+dtc477_main_murrG_04/02/2026
+```
 
-  - The debreef will be handled by the text content person. It will be a quick overview of the up coming question. This means we will have some randomization involved in what arrays are picked when starting a level.
+- Adding a short description to commits is encouraged for:
+  - Easier review
+  - Debugging support
 
-  - After a full loop is completed (debreef -> boss), that counts towards a single level.
+### ⚠️ Workflow Reminders
+
+- Always **fetch/pull before making changes**
+- File structure:
+  - `/css` → CSS files
+  - `/js` → JavaScript files
+  - Root → HTML files
+- Use **camelCase** for:
+  - Function names
+  - IDs
+
+---
+
+## ⚙️ Further Mechanic Explanation
+
+### Player
+
+- Movement is **vertically locked**
+- Fires at a **slow rate**
+- Has a **health bar**
+- No lives system (for now)
+
+### Enemies
+
+- Variety encouraged
+- Examples:
+  - Zigzag movement
+  - Projectile-based enemies
+
+---
+
+## 👾 Boss Mechanics
+
+- Appears at the **top of the screen**
+- Slowly moves downward
+- Fires projectiles intermittently
+
+### Weak Points System
+
+- Boss has **4 weak points**
+- Each weak point is **color-coded**
+
+### Trivia Integration
+
+- Question appears at the **bottom of the screen**
+- Four possible answers:
+  - Randomly assigned colors
+  - Colors match boss weak points
+
+### Objective
+
+- Player must shoot the **correct color** to damage the boss
+
+### Additional Mechanics
+
+- Weak point colors **change periodically**
+- Hitting the **wrong weak point**:
+  - Boss descends faster
+
+---
+
+## 🧠 Debrief System
+
+- Managed by the **text content role**
+- Provides a quick overview of the upcoming question
+- Uses **randomized arrays** for content selection
+
+---
+
+## 🔁 Level Progression
+
+A full loop:
+
+```
+Debrief → Enemy Stage → Boss Stage
+```
+
+= **1 Level Completed**
+
+---
+
+## 📎 Notes
+
+- Be communicative with the team
+- Keep commits clean and descriptive
+- Stay consistent with formatting and structure
