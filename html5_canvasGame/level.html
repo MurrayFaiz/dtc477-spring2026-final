@@ -5,7 +5,8 @@
     <title>Sci-Fi Quiz</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/gameAssets/level.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/level.css">
 </head>
 
 <body>
@@ -13,11 +14,13 @@
     <script>
         const canvas = document.getElementById("spaceStage");
         const ctx = canvas.getContext("2d");
+        const bgImage = new Image();
+        bgImage.src = "css/images/background.png";
     </script>
-    <script src="/gameScripts/playerScript.js" crossorigin="anonymous"></script>
-    <script src="/gameScripts/enemyScript.js" crossorigin="anonymous"></script>
-    <script src="/gameScripts/collisionsScript.js" crossorigin="anonymous"></script>
-    <script src="/gameScripts/runGameLoop.js" crossorigin="anonymous"></script>
+    <script src="gameScripts/playerScript.js" crossorigin="anonymous"></script>
+    <script src="gameScripts/enemyScript.js" crossorigin="anonymous"></script>
+    <script src="gameScripts/collisionsScript.js" crossorigin="anonymous"></script>
+    <script src="gameScripts/runGameLoop.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

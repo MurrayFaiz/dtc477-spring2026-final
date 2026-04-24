@@ -1,4 +1,7 @@
+//================
 // Asteroid Script
+//================
+
 let asteroids = [];
 
 function spawnAsteroid() {
@@ -60,7 +63,10 @@ function drawAsteroids() {
     });
 }
 
+//=============
 // Alien Script
+//=============
+
 let aliens = [];
 
 function spawnAlien() {

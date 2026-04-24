@@ -67,7 +67,7 @@ function drawPlayer() {
         if (blink === 0) return;
     }
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "red";
     ctx.fillRect(player.x - player.width / 2, player.y - player.height / 2, player.width, player.height);
 
 }

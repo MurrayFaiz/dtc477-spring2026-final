@@ -1,5 +1,5 @@
 function asteroidsCollisions() {
-    let hits = [];
+    let asteroidHits = [];
 
     // Detect collision
     bullets.forEach((b, bi) => {
@@ -8,14 +8,25 @@ function asteroidsCollisions() {
             const dy = a.y - b.y;
             const dist = Math.hypot(dx, dy);
 
-            if (dist < a.radius && !hits.some(h => h.ai === ai)) {
-                hits.push({ bi, ai });
+            if (dist < a.radius && !asteroidHits.some(h => h.ai === ai)) {
+                asteroidHits.push({ bi, ai });
+            }
+        });
+
+        aliens.forEach((atl, atli) => {
+            const dx = atl.x - b.x;
+            const dy = atl.y - b.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < Math.max(atl.height, atl.width)) {
+                bullets.splice(bi, 1);
+                aliens.splice(atli, 1);
             }
         });
     });
 
     // Split asteroids
-    hits.reverse().forEach(hit => {
+    asteroidHits.reverse().forEach(hit => {
         const b = bullets[hit.bi];
         const a = asteroids[hit.ai];
 
@@ -74,15 +85,4 @@ function playerCollisions() {
             player.takeDamage(1);
         }
     });
-
-    /*aliens.forEach(a => {
-        const dx = a.x - player.x;
-        const dy = a.y - player.y;
-        const dist = Math.hypot(dx, dy);
-
-        if (dist < playerRadius + atl.radius) {
-            player.takeDamage(1);
-        }
-    });*/
-
 }

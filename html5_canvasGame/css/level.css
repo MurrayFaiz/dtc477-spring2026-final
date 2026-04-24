@@ -2,11 +2,18 @@ body {
     margin: 0;
     background: white;
     color: white;
+    display: flex;
     overflow: hidden;
+    justify-content: center;
+    align-items: center;
 }
 
-canvas {
-    display: block;
-    margin: 0 auto;
+#spaceStage {
+    /* background-image: url("css/images/background.png"); */
+    /* background-size: cover; */
+    /* background-position: center; */
+    /* background-repeat: no-repeat; */
     background: black;
+    border: 2px solid #444;
+    margin: 0 auto;
 }
