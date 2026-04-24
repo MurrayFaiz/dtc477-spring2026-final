@@ -15,6 +15,8 @@ const player = {
     invincible: false,
     invincibleStop: 0,
 
+    active: true,
+
     takeDamage(amount) {
         if (this.invincible) return;
 
@@ -47,6 +49,8 @@ document.addEventListener("keyup", e => {
 });
 
 function updatePlayer() {
+    if (!player.active) return;
+
     if (keys["ArrowLeft"]) player.x -= player.speed;
     if (keys["ArrowRight"]) player.x += player.speed;
     player.x = Math.max(player.width / 2, Math.min(canvas.width - player.width / 2, player.x));
@@ -62,6 +66,8 @@ function updateBullets() {
 }
 
 function drawPlayer() {
+    if (!player.active) return;
+
     if (player.invincible) {
         const blink = Math.floor(Date.now() / 100) % 2;
         if (blink === 0) return;

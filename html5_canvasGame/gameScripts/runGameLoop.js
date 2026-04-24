@@ -1,30 +1,102 @@
+//Check Stage of Game
+let gameState = "enemyState"; //For Tevin: when debreif state is ready, switch it here!
+let previousState = null;
+
+function setGameState(newState) {
+    gameState = newState;
+}
+let onStateChange = null;
+
+//Run functions (in order + based on state)
 function mainLoop() {
-    //Update Player
-    updatePlayer();
-    updateBullets();
+    //Checks previous state
+    if (gameState !== previousState) {
+        if (onStateChange) {
+            onStateChange(gameState);
+        }
 
-    //Update Asteroids
-    updateAsteroids();
-    updateAliens();
+        //Resets enemies on new loop
+        if (gameState === "enemyState") {
+            asteroids = [];
+            aliens = [];
 
-    //Check Collision
-    asteroidsCollisions();
-    playerCollisions();
+            for (let i = 0; i < 3; i++) spawnAsteroid();
+            for (let i = 0; i < 3; i++) spawnAlien();
+
+            player.active = true;
+            player.playerHealth = 5;
+            player.x = canvas.width / 2;
+        }
+
+        //Resets boss on new loop
+        if (gameState === "bossState") {
+            boss.bossHealth = 10;
+            boss.lastColorChange = Date.now();
+        }
+
+        if (gameState === "gameOverState") {
+            player.active = false;
+            bullets = [];
+            asteroids = [];
+            aliens = [];
+            bossBullets = [];
+        }
+
+        previousState = gameState;
+    }
 
     //Clear Canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(bgImage, -100, 0, canvas.width * 1.2, canvas.height);
 
-    //Draw Player + Bullets
-    drawPlayer();
-    drawBullets();
+    //Player
+    if (gameState === "enemyState" || gameState === "bossState") {
+        //Update Player
+        updatePlayer();
+        updateBullets();
 
-    //Draw Asteroids
-    drawAsteroids();
-    drawAliens();
+        //Draw Player + Bullets
+        drawPlayer();
+        drawBullets();
 
+        //Check Collision
+        playerCollisions();
+    }
+
+    //Enemies
+    if (gameState === "enemyState") {
+        //Update Asteroids & Aliens
+        updateAsteroids();
+        updateAliens();
+
+        //Draw Asteroids & Aliens
+        drawAsteroids();
+        drawAliens();
+
+        //Check Asteroid & Alien collision
+        enemyCollisions();
+
+        // Check to move to Boss Stage
+        if (asteroids.length === 0 && aliens.length === 0) {
+            gameState = "bossState";
+        }
+    } else if (gameState === "bossState") {
+        //Update Boss
+        updateBoss();
+        updateBossBullets();
+
+        //Draw Boss
+        drawBoss();
+        drawBossBullets();
+
+        //Check Boss collision
+        bossCollisions();
+    } else if (gameState === "gameOverState") {
+
+    }
 
     requestAnimationFrame(mainLoop);
 }
 
+//Run game
 mainLoop();

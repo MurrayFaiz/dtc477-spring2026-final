@@ -1,4 +1,4 @@
-function asteroidsCollisions() {
+function enemyCollisions() {
     let asteroidHits = [];
 
     // Detect collision
@@ -74,6 +74,8 @@ function asteroidsCollisions() {
 
 
 function playerCollisions() {
+    if (!player.active) return;
+
     const playerRadius = (player.width + player.height) / 4
 
     asteroids.forEach(a => {
@@ -84,5 +86,70 @@ function playerCollisions() {
         if (dist < playerRadius + a.radius) {
             player.takeDamage(1);
         }
+    });
+
+    aliens.forEach(a => {
+        const dx = a.x - player.x;
+        const dy = a.y - player.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < playerRadius + a.radius) {
+            player.takeDamage(1);
+        }
+    });
+
+    bossBullets.forEach((b, bi) => {
+        const dx = b.x - player.x;
+        const dy = b.y - player.y;
+        const dist = Math.hypot(dx, dy);
+
+        if (dist < playerRadius + b.size) {
+            player.takeDamage(1);
+            return false;
+        }
+
+        return true;
+    });
+
+    //Check player health
+    if (player.playerHealth <= 0) {
+        setGameState("gameOverState");
+        console.log("Mission Failed!");
+        return;
+    }
+}
+
+function bossCollisions() {
+    if (gameState !== "bossState") return;
+
+    bullets.forEach((b, bi) => {
+        boss.collisionPoints.forEach(p => {
+
+            const px = boss.x + p.offsetX;
+            const py = boss.y + p.offsetY;
+
+            const dx = px - b.x;
+            const dy = py - b.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist < 12) {
+
+                //Remove bullet
+                bullets.splice(bi, 1);
+
+                //Hit on vulnerable
+                if (p.vulnerable) {
+                    boss.bossHealth -= 1;
+                    console.log("Hit confirmed! HP:", boss.bossHealth);
+
+                    //Check boss health
+                    if (boss.bossHealth <= 0) {
+                        setGameOverState("enemyState") //For Tevin: when debreif state is ready, switch it here!
+                        console.log("Target defeated!");
+                        return;
+                    }
+                }
+            }
+        });
     });
 }
