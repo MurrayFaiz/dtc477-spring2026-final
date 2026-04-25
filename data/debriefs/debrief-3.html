@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Debrief 3</title>
+    <style>
+        body {
+            margin: auto;
+            overflow: hidden;
+        }
+
+        #wrapper {
+            max-width: 80%;
+            max-width: 1000px;
+            margin: auto;
+            border-radius: 15px;
+            background: rgba(11, 76, 94, 0.85);
+            max-height: 100dvh;
+        }
+
+        h1 {
+            font-size: 5em;
+            font-family: 'Orbitron', monospace;
+            display: flex;
+            text-align: left;
+            padding-left: 10%;
+            padding-top: 3%;
+            margin-bottom: 0;
+            margin-top: 0;
+            color: white;
+            z-index: 10;
+
+        }
+
+        #missionBtn::after {
+            content: "Mission Confirm?";
+        }
+
+        #missionBtn:hover span {
+            display: none;
+        }
+
+        #missionBtn:hover::after {
+            content: "Are you sure?";
+        }
+
+        #debrief-Container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #visuals-Debrief {
+            width: 50%;
+            text-align: center;
+            margin-left: 3%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #visuals-Debrief video {
+            max-width: 90%;
+            margin: 3%;
+        }
+
+        #visuals-Debrief button {
+            text-align: center;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            background-color: #FF0000;
+            border-radius: 80px;
+            padding: 2.5%;
+            font-family: monospace;
+            font-size: 1.5em;
+            color: white;
+            margin-bottom: 5%;
+        }
+
+
+        #visuals-Debrief button:hover {
+            background-color: #00ffc8;
+        }
+
+        #image-Container {
+            width: 45%;
+            display: flex;
+            object-fit: contain;
+        }
+
+        #image-Container img {
+            max-width: 100%;
+            margin: 3%;
+        }
+
+        #text-Debrief {
+            width: 50%;
+            margin: auto;
+            margin: 3%;
+            margin-top: -5%;
+            padding-left: 40px;
+            padding-right: 40px;
+            border-radius: 6px;
+            background: #64BBD3;
+        }
+
+        #text-Debrief h2 {
+            color: white;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+        }
+
+        #text-Debrief h2 {
+            font-size: 1.5em;
+        }
+
+        #text-Debrief a {
+            cursor: pointer;
+            color: #8A38F5;
+            font-weight: bold;
+            text-decoration: underline dotted;
+        }
+
+        #additional-Info {
+            position: absolute;
+            z-index: 20;
+            margin: auto;
+            font-size: 1em;
+            pointer-events: none;
+        }
+
+        #additional-Info p {
+            margin: 0;
+            position: fixed;
+            width: 40%;
+            border-radius: 12px;
+            padding: 1%;
+            background: #8A38F5;
+            color: white;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        #additional-Info p.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        #additional-Info p:first-of-type {
+            top: 32%;
+            left: 30%;
+        }
+
+        #additional-Info p:nth-of-type(2) {
+            top: 36%;
+            left: 30%;
+        }
+
+        #additional-Info p:nth-of-type(3) {
+            top: 44%;
+            left: 30%;
+        }
+
+        #additional-Info p:nth-of-type(4) {
+            top: 51%;
+            left: 30%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <h1>Mission Debrief: <br> Aliens!</h1>
+        <div id="debrief-Container">
+            <div id="visuals-Debrief">
+                <video autoplay loop muted src="/video/gojira.mp4"></video>
+                <div id="image-Container">
+                    <img src="/images/industrial1.jpg" alt="helicopter flying over destroyed building">
+                    <img src="/images/industrial2.jpg" alt="polluted earth apocalypse landscape">
+                </div>
+                <button aria-label="mission button" id="missionBtn"><span></span></button>
+            </div>
+
+            <div id="text-Debrief">
+                <h2>Essential Information:</h2>
+                <p>Perhaps ever since the moment humanity has gained consciousness, we have wondered whether intelligent
+                    life exists, deep in the ground, in the ocean, in the sky, and even in other planes of existence.
+                </p>
+                <p> According to Enrico Fermi, the <a href="#" data-info="info-1">Fermi paradox </a>
+                    exemplifies the conflict between the probability of intelligent life and the total lack of evidence
+                    for it having arisen anywhere but earth.</p>
+                <p> There are two main <a href="#" data-info="info-2">Concepts to explain this:</a> the principal of
+                    mediocrity that argues Earths's conditions for life are common in the universe, and the Rare
+                    Earth hypothesis that it only exists due to a rare combination of unlikely events.</p>
+                <p>
+                    In 1966, Robin Hanson introduced the
+                    concept
+                    of <a href="#" data-info="info-3">The Great Filter</a>, a nearly impenetrable
+                    barrier making intelligent extraterrestrial life in the universe rare,
+                    due to extinction events that end life before it can become space-faring.
+                </p>
+                <p>There are also a few more potential answers to this in the <a href="#" data-info="info-4">Dark Forest
+                        Hypothesis</a>, where intelligent life must hide to avoid annihilation, or the <a href="#"
+                        data-info="info-5">Berserker Hypothesis</a> where Von Neumann probes seek out life and attack
+                    extraterrestrial life regardless of threat.
+                </p>
+
+
+            </div>
+
+            <div id="additional-Info">
+                <p id="info-1">However, as far as we currently know, we have not been able to measure signs of other
+                    intelligent life in the universe. This, according to Enrico Fermi, is a paradox that exemplifies the
+                    conflict between the probability of intelligent life and the total lack of evidence for it having
+                    arisen anywhere but earth.</p>
+                <p id="info-2">There are multiple potential explanations for this, such as the principal of mediocrity
+                    that argues Earth is not unusual in having intelligent life, where by contrast, the Rare Earth
+                    hypothesis postulates that our existence is due to a series of events unlikely to occur together..
+                </p>
+                <p id="info-3">
+                    Unfortunately, most of the potential answers we currently have to not seem to be optimistic. In
+                    1966, Robin Hanson introduced the concept of The Great Filter, which refers to a phenomenon in which
+                    there exists a nearly impenetrable barrier to development that makes detectable intelligent
+                    extraterrestrial life in the universe rare, due to extinction events that end life before it can
+                    become space-faring.</p>
+                <p id="info-4"> For example, the Dark Forest Hypothesis posits that Extraterrestrial civilizations may
+                    exist but need to remain hidden out of fear of a more advanced and hostile civilization annihilating
+                    them.
+                    .</p>
+                <p id="info-5">Perhaps even more terrifying is the possibility of the Berserker Hypothesis, in which
+                    self
+                    replicating machines are sent throughout the galaxy to locate and destroy any competing intelligent
+                    life before it becomes a threat.
+                    .</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+        // Code Worked on by Tevin Lu
+        // Written portion by Tevin Lu
+        // Chat url: https://chatgpt.com/share/69ecfd8c-ef50-83e8-8223-88a45d76da6f
+
+        // Logic Steps
+
+        // 1. Initialize the text debrief data-info broken down into the links (Id="text-Debrief") and (a[data-info])
+        // 2. Store all the boxes under additional info under their paragraph elements (id="additional-Info" p)
+        // 3. Create a function to hide it all by removing the visible class (hideAll) and (class="visible")  
+        // 4. For the links, add an event listener, prevent the document from being closed immediately 
+        // 5. read the data, prevent clicking a link from immediately navigating you to a different spot on the screen (preventDefault), and 
+        // 6. conditional for the condition the box is already visible so only 1 box shows at a time
+        // 7. If you click on a currently open box you stop it from automatically closing (stopPropagation)
+        // 8. Clicking outside of the box hides all of the boxes
+
+        const links = document.querySelectorAll('#text-Debrief a[data-info]');
+        const allBoxes = document.querySelectorAll('#additional-Info p');
+
+
+        function hideAll() {
+            allBoxes.forEach(box => box.classList.remove('visible'));
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const targetId = e.currentTarget.dataset.info
+                const targetBox = document.getElementById(targetId);
+                const isAlreadyVisible = targetBox.classList.contains('visible');
+
+                if (targetBox === null) {
+                    console.error(`No element found with id: ${targetId}`);
+                    return;
+                }
+
+                hideAll();
+
+                if (!isAlreadyVisible) {
+                    targetBox.classList.add('visible');
+                }
+            });
+        });
+
+        allBoxes.forEach(box => {
+            box.addEventListener('click', e => e.stopPropagation());
+        });
+
+        document.addEventListener('click', () => hideAll());
+
+        const missionBtn = document.getElementById('missionBtn');
+        const wrapper = document.getElementById('wrapper');
+
+        missionBtn.addEventListener('click', () => {
+            wrapper.style.display = 'none';
+        });
+
+        // substitute openDebriefBtn to open the debrief (WIP)
+        // openDebriefBtn.addEventListener('click', () => {
+        //     wrapper.style.display = '';
+        // });
+
+
+
+    </script>
+</body>
+
+</html>
