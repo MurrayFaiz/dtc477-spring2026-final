@@ -401,7 +401,7 @@
     <div id="app">
         <header>
             <p class="title-label">DTC 478 &mdash; 2026</p>
-            <h1>Sci-Fi Quiz</h1>
+            <h1>Mission Review</h1>
         </header>
 
         <!-- HUD: level + remaining count -->
@@ -447,18 +447,95 @@
     <footer>&copy; Tevin Lu &mdash; DTC 478 &mdash; 2026</footer>
 
     <script>
-        // CHAT LOG:
-        // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
-        // Logic Steps:
-        // 0. Fetch questions.json on load
-        // 1. Levels are ordered — each maps to a category key in the JSON
-        // 2. startOrDraw() either initialises level 1 or draws the next question
-        // 3. loadLevel() shuffles that category's questions into drawPile
-        // 4. generateQuestion() pops from drawPile; when empty, calls advanceLevel()
-        // 5. advanceLevel() loads the next level or calls endGame() when all are done
-        // 6. Score is tracked throughout and shown on the end screen
 
-        // --- State ---
+        // Tevin's Quiz Code
+
+        // CHAT LOG:
+
+        // Formatting
+        // https://claude.ai/share/3f42f837-13af-4547-9884-2fcee9441fb9
+
+        // Logic Steps
+        // https://chatgpt.com/share/69ed2786-5944-83e8-b94a-6511b2a025ef
+
+        // Generating Code Template
+        // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
+
+        // Logic Steps:
+        // 1. When the page opens, go get the questions file and store everything in it for later
+        // 2. Display the start screen of the quiz with a button to begin
+        // 3. When the user clicks the button for the first time, start the game and load the first level
+        // 4. Grab the 5 questions in a level, shuffle them randomly, and add them to a pile array
+        // 5. Draw the top card from the pile array, and and display the four possible answers to the quiz question
+        // 6. When the user picks an answer, lock all the buttons so the answer cannot be changed, then reveal the correct answer
+        // 7. Show a next button so that when the user clicks the button, it draws the next card from the pile array.
+        // 8. repeat steps 5-7 until the array is empty.
+        // 9. When the pile runs out, move to the next level, repeat step 4 with the next level's set of questions and repeat
+        // 10. when all the levels are gone, show the user's score
+        // 11. If the user restarts, wipe everything and go back to step 2.
+
+        //         Structure of the code: 
+
+        // Structure of the code:
+
+        // Initialization
+        //   - State variables declared (questions, drawPile, score, etc.)
+        //   - DOMContentLoaded → populate startScreen with Level 1 info
+        //   - levels[] array defined (name, title, desc per level)
+        //   - fetch("/data/questions.json") → assigns to questions object
+        //    ↓
+        // startOrDraw()  ← triggered by "Begin" button on startScreen
+        //   - First press: sets score = 0, currentLevelIndex = 0,
+        //     gameStarted = true, calls loadLevel(0)
+        //   - Every press: calls generateQuestion()
+        //    ↓
+        // loadLevel(index)
+        //   - Reads questions[level.name] from loaded JSON
+        //   - Shuffles pool into drawPile via Fisher-Yates shuffle()
+        //   - Sets levelSize, calls updateHUD()
+        //    ↓
+        // generateQuestion()
+        //   - If drawPile is empty → advanceLevel()
+        //   - Otherwise: pops currentQuestion, calls renderQuestion()
+        //    ↓
+        // renderQuestion()
+        //   - Hides startScreen/endScreen, shows questionScreen
+        //   - Populates category, question ID, question text
+        //   - Resets feedback + nextBtn visibility
+        //   - Calls buildChoices(), updateHUD(), updateProgress()
+        //    ↓
+        // buildChoices()
+        //   - Dynamically creates A/B/C/D buttons for currentQuestion.choices
+        //   - Binds each button to handleChoice(index)
+        //    ↓
+        // handleChoice(selectedIndex)
+        //   - Disables all buttons, highlights correct (green) and wrong (red)
+        //   - Increments totalAnswered; increments score if correct
+        //   - Displays feedback text
+        //   - Shows nextBtn ("Next Question →" or "Next Level →")
+        //    ↓
+        // nextBtn click → generateQuestion()
+        //    ↓
+        // (loops until drawPile is empty)
+        //    ↓
+        // advanceLevel()
+        //   - Increments currentLevelIndex
+        //   - If past last level → endGame()
+        //   - Otherwise → loadLevel(newIndex) + showTransition()
+        //    ↓
+        // showTransition()
+        //   - Shows startScreen populated with next level's info
+        //   - Button press → startOrDraw() → generateQuestion()
+        //    ↓
+        // (outer loop repeats for each level)
+        //    ↓
+        // endGame()
+        //   - Shows endScreen with final score / totalAnswered
+        //   - Sets gameStarted = false
+        //    ↓
+        // restartGame()  ← optional, resets all state back to startScreen (Level 1)
+
+        // --- Initialization State ---
         let questions = null;
         let currentQuestion = null;
         let drawPile = [];
@@ -468,7 +545,16 @@
         let levelSize = 0;    // how many questions were in this level at load time
         let gameStarted = false;
 
-        // --- Level definitions ---
+        // Initialize screen
+
+        // --- Set start screen to level 1 on page load ---
+        window.addEventListener("DOMContentLoaded", function () {
+            document.getElementById("levelBadge").textContent = "Level 1";
+            document.getElementById("levelTitle").textContent = levels[0].title;
+            document.getElementById("levelDesc").textContent = levels[0].desc;
+        });
+
+        // --- Loading in Level descriptions ---
         // name:  must match a key in questions.json
         // title: display name shown on the transition card
         // desc:  short blurb shown before the level starts
@@ -488,19 +574,21 @@
                 title: "The Fermi Paradox",
                 desc: "Five questions on the silence of the universe and what it might mean."
             },
-            {
-                name: "ai",
-                title: "Artificial Intelligence",
-                desc: "Five questions on machine intelligence, consciousness, and the posthuman."
-            },
-            {
-                name: "philosophy",
-                title: "Philosophy",
-                desc: "Five questions on determinism, reality, mind, and the nature of existence."
-            }
+            // Levels to be added later
+            // {
+            //     name: "ai",
+            //     title: "Artificial Intelligence",
+            //     desc: "Five questions on machine intelligence, consciousness, and the posthuman."
+            // },
+            // {
+            //     name: "philosophy",
+            //     title: "Philosophy",
+            //     desc: "Five questions on determinism, reality, mind, and the nature of existence."
+            // }
         ];
 
-        // --- Fetch questions.json ---
+        // Fetch the json file for its questions
+        // Fetch questions.json
         fetch("/data/questions.json")
             .then(r => r.json())
             .then(data => {
@@ -509,7 +597,8 @@
             })
             .catch(err => console.error("Failed to load questions.json:", err));
 
-        // --- Fisher-Yates shuffle (returns a new array, does not mutate) ---
+        // Shuffle the array 
+        // Fisher-Yates shuffle 
         function shuffle(array) {
             const arr = [...array];
             for (let i = arr.length - 1; i > 0; i--) {
@@ -519,7 +608,8 @@
             return arr;
         }
 
-        // --- Button on the start/transition screen ---
+        // Button on the start/transition screen 
+
         function startOrDraw() {
             if (!questions) { console.log("JSON not loaded yet"); return; }
 
@@ -535,7 +625,8 @@
             generateQuestion();
         }
 
-        // --- Shuffle the current level's questions into drawPile ---
+        // Shuffle the current level's questions into drawPile 
+
         function loadLevel(index) {
             const level = levels[index];
             const pool = questions[level.name];
@@ -551,6 +642,7 @@
             console.log("Loaded level:", level.name, "| Questions:", drawPile.length);
         }
 
+        // generate a question based off the shuffled pile
         // --- Pop one question from the draw pile ---
         function generateQuestion() {
             if (drawPile.length === 0) {
@@ -563,6 +655,7 @@
             renderQuestion();
         }
 
+        // render the display for the questions
         // --- Render question and choices ---
         function renderQuestion() {
             document.getElementById("startScreen").style.display = "none";
@@ -583,6 +676,7 @@
             updateProgress();
         }
 
+        // Add labels and choices for questions
         // --- Inject A/B/C/D choice buttons ---
         const LABELS = ["A", "B", "C", "D"];
 
@@ -601,6 +695,9 @@
             });
         }
 
+
+        // Answer selection
+
         // --- Handle answer selection ---
         function handleChoice(selectedIndex) {
             const correctIndex = currentQuestion.correct;
@@ -617,22 +714,38 @@
             const feedbackEl = document.getElementById("feedback");
             feedbackEl.style.display = "block";
 
+            // WHETHER ANSWER IS CORRECT OR NOT, TIE INTO BOSS HP/WEAKNESS
+            // Keep in mind we want our players to answer all the questions
+
             if (selectedIndex === correctIndex) {
                 score++;
-                feedbackEl.textContent = "// CORRECT";
+                feedbackEl.textContent = "// CORRECT BOSS VULNERABILITY IDENTIFIED";
                 feedbackEl.className = "feedback-correct";
+
+                // TO ADD:
+                // add variable here to weaken boss (Lower boss defense?) or show vulnerable spot (We could just highlight spots in red and boost damage)
+                // set opacity to 0 for now after a delay
+
             } else {
                 feedbackEl.textContent = "// INCORRECT — correct answer highlighted above";
                 feedbackEl.className = "feedback-wrong";
+
+                // TO ADD:
+                // set opacity to 0 for now, before returning to the next question after a delay
+                // reduce damage we do to the boss
             }
 
             const isLastInLevel = drawPile.length === 0;
+            // TO ADD:
+            // allow boss to be fully defeated when drawpile length is 0
+            // tie into next debrief (Debrief 2, 3, etc)
             const nextBtn = document.getElementById("nextBtn");
             nextBtn.textContent = isLastInLevel ? "Next Level →" : "Next Question →";
             nextBtn.style.display = "block";
         }
 
-        // --- Move to next level, or end game ---
+        // Advance level and end game when running out of levels function
+
         function advanceLevel() {
             currentLevelIndex++;
 
@@ -645,7 +758,9 @@
             showTransition();
         }
 
+        // In between levels function
         // --- Show the between-level card ---
+
         function showTransition() {
             document.getElementById("questionScreen").style.display = "none";
             document.getElementById("startScreen").style.display = "block";
@@ -659,6 +774,8 @@
         }
 
         // --- Show the end screen ---
+        // Show results of all quizzes
+
         function endGame() {
             gameStarted = false;
             document.getElementById("questionScreen").style.display = "none";
@@ -669,7 +786,8 @@
             updateHUD();
         }
 
-        // --- Restart from level 1 ---
+        // Restart and reinitialize state
+
         function restartGame() {
             score = 0;
             totalAnswered = 0;
@@ -690,6 +808,7 @@
             document.getElementById("progressBar").style.width = "0%";
         }
 
+        // Update progress
         // --- Update the HUD bar ---
         function updateHUD() {
             const levelNum = currentLevelIndex >= 0 ? currentLevelIndex + 1 : "—";
@@ -703,6 +822,7 @@
             document.getElementById("hudRemaining").textContent = remaining;
         }
 
+        // Update progress
         // --- Update the progress bar (within current level) ---
         function updateProgress() {
             if (levelSize === 0) return;
@@ -711,12 +831,6 @@
             document.getElementById("progressBar").style.width = pct + "%";
         }
 
-        // --- Set start screen to level 1 on page load ---
-        window.addEventListener("DOMContentLoaded", function () {
-            document.getElementById("levelBadge").textContent = "Level 1";
-            document.getElementById("levelTitle").textContent = levels[0].title;
-            document.getElementById("levelDesc").textContent = levels[0].desc;
-        });
     </script>
 
 </body>

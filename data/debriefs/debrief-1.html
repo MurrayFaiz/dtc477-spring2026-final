@@ -22,7 +22,7 @@
 
         h1 {
             font-size: 5em;
-            font-family: monospace;
+            font-family: 'Orbitron', monospace;
             display: flex;
             text-align: left;
             padding-left: 10%;
@@ -31,6 +31,19 @@
             margin-top: 0;
             color: white;
             z-index: 10;
+
+        }
+
+        #missionBtn::after {
+            content: "Mission Confirm?";
+        }
+
+        #missionBtn:hover span {
+            display: none;
+        }
+
+        #missionBtn:hover::after {
+            content: "Are you sure?";
         }
 
         #debrief-Container {
@@ -96,6 +109,7 @@
         #text-Debrief h2 {
             color: white;
             text-align: center;
+            font-family: 'Orbitron', monospace;
         }
 
         #text-Debrief h2 {
@@ -169,7 +183,7 @@
                     <img src="/images/industrial1.jpg" alt="helicopter flying over destroyed building">
                     <img src="/images/industrial2.jpg" alt="polluted earth apocalypse landscape">
                 </div>
-                <button>Mission <br> Confirm?</button>
+                <button aria-label="mission button" id="missionBtn"><span></span></button>
             </div>
 
             <div id="text-Debrief">
@@ -221,8 +235,24 @@
 
     <script>
 
+        // Code Worked on by Tevin Lu
+        // Written portion by Tevin Lu
+        // Chat url: https://chatgpt.com/share/69ecfd8c-ef50-83e8-8223-88a45d76da6f
+
+        // Logic Steps
+
+        // 1. Initialize the text debrief data-info broken down into the links (Id="text-Debrief") and (a[data-info])
+        // 2. Store all the boxes under additional info under their paragraph elements (id="additional-Info" p)
+        // 3. Create a function to hide it all by removing the visible class (hideAll) and (class="visible")  
+        // 4. For the links, add an event listener, prevent the document from being closed immediately 
+        // 5. read the data, prevent clicking a link from immediately navigating you to a different spot on the screen (preventDefault), and 
+        // 6. conditional for the condition the box is already visible so only 1 box shows at a time
+        // 7. If you click on a currently open box you stop it from automatically closing (stopPropagation)
+        // 8. Clicking outside of the box hides all of the boxes
+
         const links = document.querySelectorAll('#text-Debrief a[data-info]');
         const allBoxes = document.querySelectorAll('#additional-Info p');
+
 
         function hideAll() {
             allBoxes.forEach(box => box.classList.remove('visible'));
@@ -231,11 +261,16 @@
         links.forEach(link => {
             link.addEventListener('click', e => {
                 e.preventDefault();
-                e.stopPropagation(); // prevent the document click from immediately closing it
+                e.stopPropagation();
 
-                const targetId = link.dataset.info;
+                const targetId = e.currentTarget.dataset.info
                 const targetBox = document.getElementById(targetId);
                 const isAlreadyVisible = targetBox.classList.contains('visible');
+
+                if (targetBox === null) {
+                    console.error(`No element found with id: ${targetId}`);
+                    return;
+                }
 
                 hideAll();
 
@@ -245,13 +280,26 @@
             });
         });
 
-        // Clicking an open info box keeps it open
         allBoxes.forEach(box => {
             box.addEventListener('click', e => e.stopPropagation());
         });
 
-        // Clicking anywhere else closes all boxes
         document.addEventListener('click', () => hideAll());
+
+        const missionBtn = document.getElementById('missionBtn');
+        const wrapper = document.getElementById('wrapper');
+
+        missionBtn.addEventListener('click', () => {
+            wrapper.style.display = 'none';
+        });
+
+        // substitute openDebriefBtn to open the debrief (WIP)
+        // openDebriefBtn.addEventListener('click', () => {
+        //     wrapper.style.display = '';
+        // });
+
+
+
     </script>
 </body>
 
