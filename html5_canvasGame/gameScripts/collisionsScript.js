@@ -144,7 +144,7 @@ function bossCollisions() {
 
                     //Check boss health
                     if (boss.bossHealth <= 0) {
-                        setGameOverState("enemyState") //For Tevin: when debreif state is ready, switch it here!
+                        setGameState("enemyState") //For Tevin: when debreif state is ready, switch it here!
                         console.log("Target defeated!");
                         return;
                     }
