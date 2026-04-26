@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sci-Fi Quiz</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/level.css">
+</head>
+
+<body>
+<div id="gameWrapper">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+    <div id="startOverlay">
+        <button id="startButton">Start Game</button>
+    </div>
+</div>
+
+
+    <script>
+        // GLOBAL canvas + ctx used by ALL scripts
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Background image (optional)
+        const bgImage = new Image();
+        bgImage.src = "images/background.png";
+    </script>
+
+    <script src="scripts/playerScript.js"></script>
+    <script src="scripts/enemyScript.js"></script>
+    <script src="scripts/collisionsScript.js"></script>
+    <script src="scripts/bossScript.js"></script>
+    <script src="scripts/runGameLoop.js"></script>
+</body>
+
+</html>

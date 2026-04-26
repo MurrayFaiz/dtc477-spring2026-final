@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+
+        #game-area {
+            position: relative;
+            height: 99vh;
+            background: white;
+            border: 3px solid lightgray;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+
+            /* CRT curvature */
+            border-radius: 12px;
+            transform: perspective(900px) translateZ(0) rotateX(1deg);
+
+            /* CRT glow + contrast */
+            filter: brightness(1.05) contrast(1.15);
+
+            /* Reduced flicker */
+            animation: crtFlicker 0.2s infinite;
+        }
+
+        /* CRT Scanlines */
+        #game-area::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.08) 0px,
+                rgba(0,0,0,0.08) 2px,
+                transparent 2px,
+                transparent 4px
+            );
+            opacity: 0.18;
+            mix-blend-mode: multiply;
+            z-index: 3;
+        }
+
+        /* CRT Glow */
+        #game-area::before {
+            content: "";
+            position: absolute;
+            inset: -10%;
+            background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        @keyframes crtFlicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.985; }
+        }
+
+        #game-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+            z-index: 1;
+        }
+
+        /* PAGE FADE OVERLAY */
+        #fade-overlay {
+            position: absolute;
+            inset: 0;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            z-index: 10;
+        }
+
+        #fade-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* MAIN MENU BOX */
+        #menu-box {
+            position: absolute;
+            width: 200px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 3px solid #555;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+
+            left: 50%;
+            top: 42%;
+            transform: translate(-50%, -50%);
+
+            opacity: 0;
+            animation: menuEnter 1s ease forwards;
+            z-index: 5;
+        }
+
+        @keyframes menuEnter {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .menu-btn {
+            width: 150px;
+            height: 27px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.08);
+            background: #444;
+        }
+
+        /* SLIDE-IN PANELS */
+        .side-panel {
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 60%;
+            height: 100%;
+            background: rgba(20, 20, 20, 0.95);
+            border-left: 3px solid #555;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+            transition: right 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+            color: white;
+
+            opacity: 0;
+            transform: scale(0.95);
+            z-index: 20;
+        }
+
+        .side-panel.open {
+            right: 0;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .close-btn {
+            margin-top: 20px;
+            width: 140px;
+            height: 45px;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #creditsText {
+            width: 80%;
+            max-width: 600px;
+            height: 60%;
+            overflow-y: auto;
+            padding-right: 10px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+    </style>
+</head>
+
+<body>
+
+
+    <div id="game-area">
+        <img id="game-image" src="assets/images/Main.png" alt="Main Menu Background">
+
+        <!-- FADE TRANSITION OVERLAY -->
+        <div id="fade-overlay"></div>
+
+        <!-- SOUND EFFECTS (placeholder filenames) -->
+        <audio id="sndHover" src="Sounds/hover.wav"></audio>
+        <audio id="sndClick" src="Sounds/click.wav"></audio>
+        <audio id="sndOpen" src="Sounds/panelOpen.wav"></audio>
+        <audio id="sndClose" src="Sounds/panelClose.wav"></audio>
+        <audio id="sndCoin" src="Sounds/coin.wav"></audio>
+        <audio id="sndHum" src="Sounds/hum.mp3" loop></audio>
+
+        <!-- CENTERED MENU BOX -->
+        <div id="menu-box">
+            <a class="menu-btn" id="startGame">Play</a>
+            <button class="menu-btn" id="openController">Controller Layout</button>
+            <button class="menu-btn" id="openOptions">Options</button>
+            <button class="menu-btn" id="openCredits">Credits</button>
+        </div>
+
+        <!-- CONTROLLER PANEL -->
+        <div id="controller-panel" class="side-panel">
+            <h2>Controller Layout</h2>
+            <img src="Images/ControllerLayout.png" alt="Controller Layout">
+            <button class="close-btn" data-close="controller-panel">Close</button>
+        </div>
+
+        <!-- OPTIONS PANEL -->
+        <div id="options-panel" class="side-panel">
+            <h2>Options</h2>
+            <p>Volume, controls, display settings, etc. can go here.</p>
+            <button class="close-btn" data-close="options-panel">Close</button>
+        </div>
+
+        <!-- CREDITS PANEL -->
+        <div id="credits-panel" class="side-panel">
+            <h2>Credits</h2>
+            <div id="creditsText">
+                <p><strong>Game Developer:</strong> Jackson</p>
+                <p><strong>Art & Design:</strong> Jackson</p>
+                <p><strong>Programming:</strong> Jackson</p>
+                <p><strong>Special Thanks:</strong> You</p>
+            </div>
+            <button class="close-btn" data-close="credits-panel">Close</button>
+        </div>
+
+    </div>
+
+    <script>
+        const fade = document.getElementById("fade-overlay");
+        const start = document.getElementById("startGame");
+
+        const sndHover = document.getElementById("sndHover");
+        const sndClick = document.getElementById("sndClick");
+        const sndOpen = document.getElementById("sndOpen");
+        const sndClose = document.getElementById("sndClose");
+        const sndCoin = document.getElementById("sndCoin");
+        const sndHum = document.getElementById("sndHum");
+
+        /* STARTUP SOUNDS (flash removed) */
+        window.onload = () => {
+            sndCoin.play();
+            setTimeout(() => sndHum.play(), 500);
+        };
+
+        /* Hover sound */
+        document.querySelectorAll(".menu-btn").forEach(btn => {
+            btn.addEventListener("mouseenter", () => sndHover.play());
+        });
+
+        /* Click sound */
+        document.querySelectorAll(".menu-btn").forEach(btn => {
+            btn.addEventListener("click", () => sndClick.play());
+        });
+
+        /* Fade-out transition for Start Game */
+        start.addEventListener("click", () => {
+            fade.classList.add("active");
+            setTimeout(() => {
+                window.location.href = "Game.html";
+            }, 600);
+        });
+
+        /* Open panels */
+        document.getElementById("openController").onclick = () => {
+            sndOpen.play();
+            document.getElementById("controller-panel").classList.add("open");
+        };
+
+        document.getElementById("openOptions").onclick = () => {
+            sndOpen.play();
+            document.getElementById("options-panel").classList.add("open");
+        };
+
+        document.getElementById("openCredits").onclick = () => {
+            sndOpen.play();
+            document.getElementById("credits-panel").classList.add("open");
+        };
+
+        /* Close panels */
+        document.querySelectorAll(".close-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                sndClose.play();
+                const panelId = btn.getAttribute("data-close");
+                document.getElementById(panelId).classList.remove("open");
+            });
+        });
+    </script>
+
+</body>
+</html>

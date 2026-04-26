@@ -1,4 +1,8 @@
 //Check Stage of Game
+
+let gameRunning = false;
+
+
 let gameState = "enemyState"; //For Tevin: when debreif state is ready, switch it here!
 let previousState = null;
 
@@ -28,11 +32,21 @@ function mainLoop() {
             player.x = canvas.width / 2;
         }
 
-        //Resets boss on new loop
-        if (gameState === "bossState") {
-            boss.bossHealth = 10;
-            boss.lastColorChange = Date.now();
-        }
+if (gameState === "bossState") {
+    boss.bossHealth = 10;
+    boss.lastColorChange = Date.now();
+
+    // Reset player for Space Invaders mode
+    player.vx = 0;
+    player.vy = 0;
+    player.angle = 0;
+
+    // Reset player position to bottom center
+    player.x = canvas.width / 2;
+    player.y = canvas.height - 40;
+}
+
+
 
         if (gameState === "gameOverState") {
             player.active = false;
@@ -99,4 +113,14 @@ function mainLoop() {
 }
 
 //Run game
-mainLoop();
+function startGame() {
+    if (!gameRunning) {
+        gameRunning = true;
+        mainLoop();
+    }
+}
+
+document.getElementById("startButton").addEventListener("click", () => {
+    document.getElementById("startOverlay").style.display = "none";
+    startGame();
+});
