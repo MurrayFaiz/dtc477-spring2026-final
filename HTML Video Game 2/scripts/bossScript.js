@@ -5,9 +5,11 @@ const boss = {
     height: 100,
     speedY: 0.05,
 
-    bossHealth: 10,
+    bossHealth: 100,
     lastTimeBossShot: 0,
     shootInterval: 2000,
+    laserHitCooldown: 0,
+    laserHitDelay: 500, // ms between laser hits
 
     //Set color and create collision points
     activeColor: null,
@@ -22,6 +24,63 @@ const boss = {
     ],
 };
 
+
+//Script Logic Suggestions:
+// We may want to tie the vulnerable spot to the array values and color in updateBoss, I'm not sure yet
+// we run a check for the level stored to determine which series of questions/level we are on from quiz script
+// A SUGGESTION
+
+//Initialize which boss
+
+// The First boss
+let bossNumber = 0
+
+// Boss Phases in a simple way for the quiz and to slightly change behavior based off of health values
+
+// if (boss.bossHealth >= 100 || boss.bossHealth <= 80) {
+//     // set boss speed to 0, stop bullets from the boss
+//     // set opacity of quiz html overlay to 1, run the next question in the array
+//     // on the condition we got it correct, once the player clicks the next button, we set the quiz opacity back to 0 
+//     // we increase the damage the player does temporarily by a small amount on victory, or lower the damage if question is failed  
+//     // boss speed and damage set back to normal   
+// },
+
+// else if (boss.bossHealth < 80 || boss.bossHealth > 60) {    // set boss speed to 0, stop bullets from the boss
+//     // set opacity of quiz html overlay to 1, run the next question in the array  
+//     // on the condition we got it correct, once the player clicks the next button, we set the quiz opacity back to 0 
+//     // we increase the damage the player does temporarily by a small amount on victory or lower the damage if question is failed   
+//     // boss speed and damage set back to normal   
+// },
+
+// else if (boss.bossHealth < 59 || boss.bossHealth > 40) {    // set boss speed to 0, stop bullets from the boss
+//     // set opacity of quiz html overlay to 1, run the next question in the array  
+//     // on the condition we got it correct, once the player clicks the next button, we set the quiz opacity back to 0 
+//     // we increase the damage the player does temporarily by a small amount on victory or lower the damage if question is failed    
+//     // boss speed and damage increased slightly
+// },
+
+// else if (boss.bossHealth < 40 || boss.bossHealth > 20) {    // set boss speed to 0, stop bullets from the boss
+//     // set opacity of quiz html overlay to 1, run the next question in the array  
+//     // on the condition we got it correct, once the player clicks the next button, we set the quiz opacity back to 0 
+//     // we increase the damage the player does temporarily by a small amount on victory or lower the damage if question is failed    
+//     // boss speed and damage increased slightly
+// },
+
+// else if (boss.bossHealth < 19 || boss.bossHealth > 0) {    // set boss speed to 0, stop bullets from the boss
+//     // set opacity of quiz html overlay to 1, run the next question in the array  
+//     // on the condition we got it correct, once the player clicks the next button, we set the quiz opacity back to 0 
+//     // we increase the damage the player does temporarily by a small amount on victory or lower the damage if question is failed
+//     // boss speed and damage increased moderately       
+// },
+
+// else {
+//     // show boss slain screen/graphic
+//     // set opacity of quiz back to 0
+//     // bossNumber = +1 
+//     // if bossNumber >2 (For 3 bosses total) then reset back to 0
+//     // function for debrief using a data-info value or some sort to change which debrief it is , set wrapper display for debrief to block/shown in some way
+//     // maybe throw it into a function or conditional that can change the bosses based off of the value of bossNumber (Can probably be used for images, music, and sounds too)
+// }
 
 let bossBullets = [];
 

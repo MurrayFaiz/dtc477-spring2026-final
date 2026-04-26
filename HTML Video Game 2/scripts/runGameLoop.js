@@ -1,4 +1,3 @@
-//Check Stage of Game
 
 let gameRunning = false;
 
@@ -28,23 +27,23 @@ function mainLoop() {
             for (let i = 0; i < 3; i++) spawnAlien();
 
             player.active = true;
-            player.playerHealth = 5;
+            player.playerHealth = 100;
             player.x = canvas.width / 2;
         }
 
-if (gameState === "bossState") {
-    boss.bossHealth = 10;
-    boss.lastColorChange = Date.now();
+        if (gameState === "bossState") {
+            boss.bossHealth = 10;
+            boss.lastColorChange = Date.now();
 
-    // Reset player for Space Invaders mode
-    player.vx = 0;
-    player.vy = 0;
-    player.angle = 0;
+            // Reset player for Space Invaders mode
+            player.vx = 0;
+            player.vy = 0;
+            player.angle = 0;
 
-    // Reset player position to bottom center
-    player.x = canvas.width / 2;
-    player.y = canvas.height - 40;
-}
+            // Reset player position to bottom center
+            player.x = canvas.width / 2;
+            player.y = canvas.height - 40;
+        }
 
 
 
@@ -67,11 +66,14 @@ if (gameState === "bossState") {
     if (gameState === "enemyState" || gameState === "bossState") {
         //Update Player
         updatePlayer();
-        updateBullets();
+
+
 
         //Draw Player + Bullets
         drawPlayer();
-        drawBullets();
+        drawWeapons();
+        drawExplosions();
+        updateWeapons();
 
         //Check Collision
         playerCollisions();
@@ -102,8 +104,6 @@ if (gameState === "bossState") {
         //Draw Boss
         drawBoss();
         drawBossBullets();
-
-        //Check Boss collision
         bossCollisions();
     } else if (gameState === "gameOverState") {
 
