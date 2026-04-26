@@ -16,12 +16,12 @@ const player = {
     invincibleStop: 0,
 
     active: true,
-    angle: 0,
-    vx: 0,
-    vy: 0,
-    rotationSpeed: 0.07,
-    thrustPower: 0.15,
-    friction: 0.99,
+angle: 0,
+vx: 0,
+vy: 0,
+rotationSpeed: 0.07,
+thrustPower: 0.15,
+friction: 0.99,
 
     takeDamage(amount) {
         if (this.invincible) return;
@@ -74,7 +74,7 @@ function updatePlayer() {
         // ASTEROIDS MODE
 
         // Rotate ship
-        if (keys["ArrowLeft"]) player.angle -= player.rotationSpeed;
+        if (keys["ArrowLeft"])  player.angle -= player.rotationSpeed;
         if (keys["ArrowRight"]) player.angle += player.rotationSpeed;
 
         // Thrust forward
@@ -100,7 +100,7 @@ function updatePlayer() {
     } else if (gameState === "bossState") {
         // SPACE INVADERS MODE
 
-        if (keys["ArrowLeft"]) player.x -= player.speed;
+        if (keys["ArrowLeft"])  player.x -= player.speed;
         if (keys["ArrowRight"]) player.x += player.speed;
 
         // Clamp to screen

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Local Game Test</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+            font-family: sans-serif;
+        }
+
+        #gameCanvas {
+            background: black;
+            border: 2px solid #555;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <canvas id="gameCanvas" width="900" height="600"></canvas>
+
+ <script src="scripts/gameObjects.js"></script>
+<script src="scripts/stateManager.js"></script>
+<script src="scripts/player.js"></script>
+<script src="scripts/enemies.js"></script>
+<script src="scripts/boss.js"></script>
+<script src="scripts/collisions.js"></script>
+<script src="scripts/main.js"></script>
+
+</body>
+</html>

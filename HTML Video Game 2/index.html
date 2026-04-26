@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>Main Menu</title>
@@ -46,11 +45,13 @@
             position: absolute;
             inset: 0;
             pointer-events: none;
-            background: repeating-linear-gradient(to bottom,
-                    rgba(0, 0, 0, 0.08) 0px,
-                    rgba(0, 0, 0, 0.08) 2px,
-                    transparent 2px,
-                    transparent 4px);
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(0,0,0,0.08) 0px,
+                rgba(0,0,0,0.08) 2px,
+                transparent 2px,
+                transparent 4px
+            );
             opacity: 0.18;
             mix-blend-mode: multiply;
             z-index: 3;
@@ -61,21 +62,14 @@
             content: "";
             position: absolute;
             inset: -10%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.12), transparent 70%);
+            background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
             pointer-events: none;
             z-index: 2;
         }
 
         @keyframes crtFlicker {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.985;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.985; }
         }
 
         #game-image {
@@ -199,6 +193,7 @@
             font-size: 18px;
             line-height: 1.5;
         }
+
     </style>
 </head>
 
@@ -317,5 +312,4 @@
     </script>
 
 </body>
-
 </html>
