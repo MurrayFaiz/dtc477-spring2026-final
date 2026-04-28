@@ -8,11 +8,8 @@ const boss = {
     bossHealth: 10,
     lastTimeBossShot: 0,
     shootInterval: 2000,
-<<<<<<< Updated upstream
-=======
     laserHitCooldown: 0,
     laserHitDelay: 500,
->>>>>>> Stashed changes
 
     activeColor: null,
     colorTimer: 0,
@@ -26,20 +23,7 @@ const boss = {
     ],
 };
 
-// Boss phases (uncomment and implement when quiz overlay is ready)
-// Phase boundaries: 100-80, 80-60, 60-40, 40-20, 20-0
-// Use && not || for health range checks:
-//   if (boss.bossHealth <= 100 && boss.bossHealth > 80) { ... }
-//   else if (boss.bossHealth <= 80 && boss.bossHealth > 60) { ... }
-//   else if (boss.bossHealth <= 60 && boss.bossHealth > 40) { ... }
-//   else if (boss.bossHealth <= 40 && boss.bossHealth > 20) { ... }
-//   else if (boss.bossHealth <= 20 && boss.bossHealth > 0)  { ... }
-//   else { boss defeated }
-
-<<<<<<< Updated upstream
-=======
 let bossNumber = 0;
->>>>>>> Stashed changes
 let bossBullets = [];
 
 function updateBoss() {
