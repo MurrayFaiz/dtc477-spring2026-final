@@ -109,7 +109,7 @@ function updatePlayer() {
         // Reset drifting
         player.vx = 0;
         player.vy = 0;
-        player.angle = 0;
+        player.angle = -Math.PI / 2;
     }
 
     // Invincibility timer
@@ -152,6 +152,136 @@ function drawPlayer() {
     ctx.fillRect(-player.width / 2, -player.height / 2, player.width, player.height);
 
     ctx.restore();
+<<<<<<< Updated upstream
+=======
+
+    // Force field visual
+    const ff = weapons.active.find(w => w.type === "forcefield");
+    if (ff) {
+        const alpha = (ff.life / 180) * 0.8;
+        const pulse = Math.sin(Date.now() / 80) * 4;
+
+        ctx.save();
+
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, ff.radius + pulse, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(0, 255, 180, ${alpha})`;
+        ctx.lineWidth = 3;
+        ctx.shadowColor = "rgba(0, 255, 180, 0.8)";
+        ctx.shadowBlur = 20;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, ff.radius + pulse, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(0, 255, 180, ${alpha * 0.1})`;
+        ctx.fill();
+
+        ctx.restore();
+    }
+}
+
+// =======================
+// WEAPON FIRE LOGIC
+// =======================
+function handleWeaponFire() {
+    const held = Date.now() - (spaceHeldSince || 0);
+    spaceHeldSince = null;
+
+    const angle = player.angle;
+
+    // ---------------- TAP → BULLETS
+    if (held < 500) {
+        for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+                spawnWeapon("bullet", {
+                    x: player.x,
+                    y: player.y,
+                    vx: Math.cos(angle) * 4,
+                    vy: Math.sin(angle) * 4
+                });
+            }, i * 300);
+        }
+    }
+
+    // ---------------- MISSILE
+    else if (held < 900) {
+        spawnWeapon("missile", {
+            x: player.x,
+            y: player.y,
+            vx: Math.cos(angle) * 5,
+            vy: Math.sin(angle) * 5,
+            life: 180
+        });
+    }
+
+    // ---------------- MINE
+    else if (held < 1400) {
+        spawnWeapon("mine", {
+            x: player.x,
+            y: player.y,
+            radius: 10,
+            explodeRadius: 80,
+            life: 600
+        });
+    }
+
+    else if (held < 1650) {
+        console.log("spawning forcefield");
+        spawnWeapon("forcefield", {
+            x: player.x,
+            y: player.y,
+            radius: 80,
+            life: 180
+        });
+    }
+
+    // ---------------- LASER
+    else if (held < 2000 && held < 2500) {
+        spawnWeapon("laser", {
+            x: player.x,
+            y: player.y,
+            angle,
+            life: 30
+        });
+    }
+    // ---------------- LIGHTNING
+    else {
+        spawnWeapon("lightning", {
+            x: player.x,
+            y: player.y,
+            radius: 150,  // AOE range
+            life: 30,
+            bolts: []
+        });
+    }
+
+
+    window.addEventListener("blur", () => {
+        spaceHeldSince = null;
+        for (let key in keys) keys[key] = false;
+    });
+
+    if (spaceHeldSince !== null) {
+        const progress = Math.min((Date.now() - spaceHeldSince) / CHARGE_TIME, 1);
+
+        // Interpolate color based on progress
+        let color;
+        if (progress < 0.4) {
+            color = "rgba(0, 200, 255, "; // blue — bullet range
+        } else if (progress < 0.7) {
+            color = "rgba(255, 165, 0, ";  // orange — missile range
+        } else if (progress < 0.9) {
+            color = "rgba(255, 50, 50, ";  // red — mine range
+        } else {
+            color = "rgba(180, 0, 255, ";  // purple — laser range
+        }
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+        ctx.fillRect(player.x - 20, player.y - 22, 40, 4); // background track
+        ctx.fillStyle = color + "0.9)";
+        ctx.fillRect(player.x - 20, player.y - 22, 40 * progress, 4); // fill
+    }
+>>>>>>> Stashed changes
 }
 
 

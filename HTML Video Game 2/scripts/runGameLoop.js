@@ -32,6 +32,7 @@ function mainLoop() {
             player.x = canvas.width / 2;
         }
 
+<<<<<<< Updated upstream
 if (gameState === "bossState") {
     boss.bossHealth = 10;
     boss.lastColorChange = Date.now();
@@ -40,6 +41,16 @@ if (gameState === "bossState") {
     player.vx = 0;
     player.vy = 0;
     player.angle = 0;
+=======
+        if (gameState === "bossState") {
+            boss.bossHealth = 100;
+            boss.lastColorChange = Date.now();
+
+            // Reset player for Space Invaders mode
+            player.vx = 0;
+            player.vy = 0;
+            player.angle = -Math.PI / 2;
+>>>>>>> Stashed changes
 
     // Reset player position to bottom center
     player.x = canvas.width / 2;
@@ -49,11 +60,9 @@ if (gameState === "bossState") {
 
 
         if (gameState === "gameOverState") {
+            const weapons = { active: [] };
+            let explosions = [];
             player.active = false;
-            bullets = [];
-            asteroids = [];
-            aliens = [];
-            bossBullets = [];
         }
 
         previousState = gameState;
@@ -67,11 +76,23 @@ if (gameState === "bossState") {
     if (gameState === "enemyState" || gameState === "bossState") {
         //Update Player
         updatePlayer();
+<<<<<<< Updated upstream
         updateBullets();
 
         //Draw Player + Bullets
         drawPlayer();
         drawBullets();
+=======
+
+        //Draw Player + Bullets
+        drawPlayer();
+        drawWeapons();
+        drawDamageNumbers();
+        drawExplosions();
+        updateWeapons();
+        updateDamageNumbers();
+
+>>>>>>> Stashed changes
 
         //Check Collision
         playerCollisions();
@@ -102,9 +123,12 @@ if (gameState === "bossState") {
         //Draw Boss
         drawBoss();
         drawBossBullets();
+<<<<<<< Updated upstream
 
         //Check Boss collision
         bossCollisions();
+=======
+>>>>>>> Stashed changes
     } else if (gameState === "gameOverState") {
 
     }
