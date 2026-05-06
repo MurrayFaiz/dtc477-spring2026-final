@@ -1,0 +1,287 @@
+{
+    "universe": [
+        {
+            "id": "u1",
+            "question": "Based on observations from the Hubble Space Telescope, there are postulated to be this many galaxies in the observable universe:",
+            "choices": [
+                "Approximately 200 billion (2 * 10^11)",
+                "Approximately 2 trillion (2 * 10^12)",
+                "Approximately 10 million (1 * 10^7)",
+                "Approximately 40 billion (4 * 10^10)"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "u2",
+            "question": "Due to large distances between galaxies and the finite speed of light, we are unable to directly observe the universe in real time. When observing distant objects in the universe, this means:",
+            "choices": [
+                "We observe objects as they will appear in the future due to gravitational lensing",
+                "We are actually observing those objects as they appeared in the past — the further away, the further back in time",
+                "All objects in the universe appear to us simultaneously regardless of distance",
+                "Our observations are distorted by dark matter, making distance calculations unreliable"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "u3",
+            "question": "The 'Goldilocks zone' refers to which phenomenon?",
+            "choices": [
+                "The narrow band of the electromagnetic spectrum visible to human eyes",
+                "The period in Earth's history when temperatures were stable enough for complex life",
+                "The habitable zone around a star where conditions are just right for liquid water to exist on a planet's surface",
+                "The region of a galaxy far enough from the galactic core to avoid lethal radiation"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "u4",
+            "question": "Earth has seen multiple mass extinction events over the course of its existence. Which five geological time periods do they typically pertain to?",
+            "choices": [
+                "Cambrian, Silurian, Carboniferous, Jurassic, and Paleogene",
+                "Ordovician, Devonian, Permian, Triassic, and Cretaceous",
+                "Precambrian, Ordovician, Permian, Jurassic, and Holocene",
+                "Devonian, Carboniferous, Triassic, Cretaceous, and Quaternary"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "u5",
+            "question": "The Oxidation event refers to which event?",
+            "choices": [
+                "The rapid increase in atmospheric oxygen caused by the mass die-off of megafauna 12,000 years ago",
+                "A theoretical future event in which solar radiation breaks down Earth's remaining oxygen reserves",
+                "The Great Oxidation Event, approximately 2.4 billion years ago, when cyanobacteria began producing oxygen as a byproduct of photosynthesis, fundamentally altering Earth's atmosphere",
+                "The Cambrian Explosion, during which oxygen-breathing multicellular life first diversified rapidly"
+            ],
+            "correct": 2
+        }
+    ],
+    "gameTheory": [
+        {
+            "id": "g1",
+            "question": "Game theory refers to which concept?",
+            "choices": [
+                "The psychological study of how humans learn through play and competition",
+                "The mathematical study of strategic decision-making among rational agents whose outcomes depend on each other's choices",
+                "A branch of economics focused exclusively on market competition between corporations",
+                "The analysis of how rule systems in games can be applied to design better software"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "g2",
+            "question": "In game theory, a zero sum game and non-zero sum game refer to:",
+            "choices": [
+                "Zero sum: all players cooperate for mutual gain; non-zero sum: players compete and one must lose",
+                "Zero sum: the game has no winner; non-zero sum: the game always produces a clear winner",
+                "Zero sum: one player's gain exactly equals another's loss, so the total outcome is always zero; non-zero sum: players can all gain or all lose, so cooperation or mutual destruction is possible",
+                "Zero sum: a game played with perfect information; non-zero sum: a game played with hidden information"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "g3",
+            "question": "In game theory, John Von Neumann refers to the mixed-strategy as:",
+            "choices": [
+                "A strategy in which a player alternates between cooperation and defection on a fixed schedule",
+                "A strategy that randomly selects from available pure strategies according to a probability distribution, preventing opponents from predicting your moves",
+                "A strategy that combines offensive and defensive moves within a single turn",
+                "A strategy reserved for games with more than two players, where alliances shift each round"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "g4",
+            "question": "The tragedy of the commons refers to which phenomenon?",
+            "choices": [
+                "The tendency of democratic governments to underfund public infrastructure over time",
+                "The historical enclosure of shared farmland in medieval England that displaced peasants",
+                "The situation in which individual users, each acting in their own self-interest, deplete a shared resource — even when doing so is against everyone's long-term collective interest",
+                "The economic principle that public goods are always underproduced by free markets"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "g5",
+            "question": "In 1948, Norbert Wiener published the book Cybernetics: Or Control and Communication in the Animal and the Machine. He refers to feedback loops as:",
+            "choices": [
+                "Linear chains of causation in which information flows in one direction from input to output without returning to the source",
+                "Circular processes in which a system's output is fed back as input, allowing the system to self-regulate, adapt, and correct toward a goal",
+                "The repetitive reinforcement patterns observed in conditioned animal behavior",
+                "Mathematical sequences in which each value is determined solely by the one that precedes it"
+            ],
+            "correct": 1
+        }
+    ],
+    "fermiParadox": [
+        {
+            "id": "f1",
+            "question": "The Principle of Mediocrity and the Rare Earth hypothesis are two typically opposing views on the probability of intelligent life in the universe. What do they refer to?",
+            "choices": [
+                "Principle of Mediocrity: most planets are uninhabitable; Rare Earth: Earth's conditions are average and life elsewhere is common",
+                "Principle of Mediocrity: Earth and humanity are typical — life and intelligence should be common throughout the universe; Rare Earth: the complex conditions that produced complex life on Earth are extraordinarily unlikely to be replicated elsewhere",
+                "Principle of Mediocrity: intelligent life exists but is too primitive to contact us; Rare Earth: intelligent life exists but actively avoids contact",
+                "Principle of Mediocrity: the universe is uniform and featureless; Rare Earth: only one planet per galaxy can support life at any given time"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "f2",
+            "question": "According to Enrico Fermi, why are there no signs of intelligence elsewhere in the universe?",
+            "choices": [
+                "Fermi calculated that the energy required for interstellar travel makes it physically impossible for any civilization to reach us",
+                "Fermi believed all intelligent civilizations inevitably destroy themselves before developing radio technology",
+                "Fermi did not offer a specific answer — his question, 'Where is everybody?', simply highlighted the contradiction between the high probability of extraterrestrial civilizations and the complete absence of any evidence for them",
+                "Fermi argued that the universe is too young for other civilizations to have evolved yet"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "f3",
+            "question": "The Great Filter, introduced in 1996 by Robin Hanson, refers to which phenomenon?",
+            "choices": [
+                "The physical barrier of interstellar distance that prevents civilizations from ever making contact, even if they exist",
+                "A hypothetical barrier — some step in the development from simple matter to a spacefaring civilization — that is so difficult to pass that virtually no civilization survives it; its location (past or future) has profound implications for humanity's prospects",
+                "The natural process by which primitive civilizations filter out irrational beliefs and converge on scientific understanding",
+                "A government framework proposed by Hanson for filtering misinformation in early internet communications"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "f4",
+            "question": "As one of the possible explanations for the Fermi Paradox, the dark forest hypothesis posits that:",
+            "choices": [
+                "Intelligent civilizations inevitably exhaust their star's resources and go dark, making them undetectable",
+                "The universe is silent because life only emerges in dense galactic regions blocked from our view by interstellar dust",
+                "Every civilization in the universe stays silent and hidden because revealing your existence to any other civilization — whose intentions are unknowable — risks annihilation; the rational strategy is to strike first or stay invisible",
+                "Advanced civilizations choose to communicate only through gravitational waves, which we have not yet learned to decode"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "f5",
+            "question": "Based on John von Neumann's concept of self-replicating machines, the Berserker Hypothesis refers to a scenario in which:",
+            "choices": [
+                "A rogue AI on Earth achieves self-replication and systematically destroys all competing intelligence on the planet",
+                "An advanced alien civilization sends self-replicating autonomous probes throughout the galaxy with instructions to locate and destroy any intelligent life before it can become a threat",
+                "Von Neumann machines are deployed by humanity to terraform planets, but malfunction and begin dismantling inhabited worlds",
+                "A civilization uploads its consciousness into self-replicating machines and spreads across the galaxy, replacing biological life"
+            ],
+            "correct": 1
+        }
+    ],
+    "ai": [
+        {
+            "id": "a1",
+            "question": "The term Posthuman can be defined as:",
+            "choices": [
+                "A human who has survived an extinction-level event and adapted to radically changed conditions on Earth",
+                "Any artificial intelligence that has surpassed human-level cognition",
+                "A condition or entity that has moved beyond the current definition of human — through technological augmentation, cognitive enhancement, or biological modification — to such a degree that the boundaries of humanity no longer apply",
+                "The theoretical final stage of human evolution reached through natural selection over millions of years"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "a2",
+            "question": "A black box refers to:",
+            "choices": [
+                "A secure government server that stores classified AI training data",
+                "A system or process whose internal workings are hidden or unknown — inputs and outputs are observable, but the mechanism that connects them is opaque",
+                "The encrypted memory storage unit used in autonomous vehicles to record decision logs",
+                "A theoretical computer with infinite processing power used in thought experiments about computation"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "a3",
+            "question": "Coined by Alan Turing in the 1950s, a Turing test refers to a test which involves:",
+            "choices": [
+                "Measuring the processing speed of a computer against a human performing the same mathematical task",
+                "A machine diagnosing logical errors in its own code to verify whether it is reasoning correctly",
+                "A human evaluator conversing with both a machine and a human without knowing which is which — if the evaluator cannot reliably distinguish the machine from the human, the machine is said to have passed",
+                "A benchmark in which an AI must solve a set of problems that no human has previously been able to solve"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "a4",
+            "question": "Artificial General Intelligence (AGI) refers to:",
+            "choices": [
+                "An AI system that has been trained on a general-purpose dataset large enough to answer questions across many domains",
+                "A hypothetical AI that can understand, learn, and apply intelligence across any intellectual task a human can perform — not limited to a narrow domain",
+                "The current generation of large language models, which are considered to have reached human parity in reasoning",
+                "An AI designed to manage and coordinate other specialized AI systems within a single organization"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "a5",
+            "question": "The Technological Singularity is a phenomenon that can be defined as:",
+            "choices": [
+                "The moment at which quantum computing renders all current encryption obsolete simultaneously",
+                "The point at which global internet infrastructure becomes so interconnected that a single failure cascades into total systemic collapse",
+                "A hypothetical future point at which artificial intelligence surpasses human intelligence, triggering recursive self-improvement so rapid that its effects become impossible for humans to predict or control",
+                "The theoretical limit of Moore's Law, at which transistors can no longer be miniaturized and computational progress halts"
+            ],
+            "correct": 2
+        }
+    ],
+    "philosophy": [
+        {
+            "id": "p1",
+            "question": "In the context of Philosophy, determinism refers to:",
+            "choices": [
+                "The belief that human will is entirely free and uncaused, independent of prior events or physical conditions",
+                "The view that only observable, measurable phenomena constitute genuine knowledge",
+                "The philosophical position that all events — including human thoughts and actions — are the inevitable result of prior causes and the laws of nature, leaving no room for free will",
+                "The ethical doctrine that outcomes alone determine the moral value of an action, regardless of intent"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "p2",
+            "question": "In the context of Philosophy, moral responsibility refers to which set of ideas?",
+            "choices": [
+                "The legal principle that a person cannot be held accountable for actions taken under duress or coercion",
+                "The idea that individuals or agents are appropriately subject to praise, blame, reward, or punishment for their actions — typically tied to questions of free will, intention, and the capacity to have acted otherwise",
+                "The utilitarian calculus for measuring whether an action produces more collective good than harm",
+                "Kant's categorical imperative — the rule that one should act only according to principles one would will to be universal laws"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "p3",
+            "question": "Closely related to the ideas of Philosopher and Mathematician Rene Descartes, Cartesian dualism refers to which view on the relation between mind and matter?",
+            "choices": [
+                "The view that mind and matter are both illusions — only mathematical structures underlying reality are truly real",
+                "The position that the mind is entirely reducible to physical brain processes and that no non-material substance exists",
+                "The view that mind and body are two fundamentally distinct substances — the mind is a non-physical, thinking thing (res cogitans) and the body is a physical, extended thing (res extensa) — that nonetheless interact",
+                "The idea that perception and matter are identical, and that the external world exists only insofar as it is perceived by a conscious mind"
+            ],
+            "correct": 2
+        },
+        {
+            "id": "p4",
+            "question": "According to Philosopher Jean Baudrillard, the difference between a simulacra and a simulation is:",
+            "choices": [
+                "A simulation is a perfect digital replica of reality; a simulacra is a flawed or degraded version of that replica",
+                "A simulacra is a copy or representation that has lost its connection to any original reality — it becomes its own reality; a simulation is a representation that still refers back to an underlying real thing it is imitating",
+                "A simulation is a mental model constructed by the observer; a simulacra is a model imposed on the observer by mass media",
+                "There is no meaningful difference — Baudrillard uses the terms interchangeably to describe media-constructed realities"
+            ],
+            "correct": 1
+        },
+        {
+            "id": "p5",
+            "question": "Philosopher Gilles Deleuze and psychoanalyst Felix Guattari refer to desiring machines as elements of a system that constructs reality through neural-feedback loops. Desiring machines can also be referred to as:",
+            "choices": [
+                "Spectral assemblages — ghostly residues of repressed desire that haunt the unconscious as unresolved symbolic structures",
+                "Machinic assemblages: Simple productive units that couple, break, and recombine into larger social, economic, or linguistic formations",
+                "Bodies without Organs (BwO) — a concept describing a field of pure potential and intensity prior to organization, against which desiring machines produce flows and connections that constitute lived experience",
+                "Libidinal economies — self-sustaining cycles of desire and capital that reproduce social hierarchies through unconscious investment"
+            ],
+            "correct": 1
+        }
+    ]
+}

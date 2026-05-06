@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Credits</title>
+
+    <!-- RESET -->
+    <link rel="stylesheet" href="css/reset.css">
+
+    <style>
+        body {
+            background: black;
+            color: #00ffcc;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            height: 100vh;
+            margin: 0;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        /* Fade-in effect */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* CRT scanlines */
+        #scanlines {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(to bottom,
+                    rgba(0, 0, 0, 0.15) 0px,
+                    rgba(0, 0, 0, 0.15) 2px,
+                    rgba(0, 0, 0, 0.05) 3px);
+            opacity: 0.25;
+            z-index: 999;
+        }
+
+        /* CRT vignette */
+        #vignette {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 0, 0, 0) 60%, rgba(0, 0, 0, 0.6) 100%);
+            z-index: 998;
+        }
+
+        #creditsWrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 80%;
+            max-width: 900px;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        #creditsTitle {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 12px #00ffcc;
+            letter-spacing: 4px;
+        }
+
+        #scrollArea {
+            height: 420px;
+            overflow: hidden;
+            position: relative;
+            border-top: 2px solid #00ffcc;
+            border-bottom: 2px solid #00ffcc;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        #creditsText {
+            position: absolute;
+            width: 100%;
+            animation: scrollUp 28s linear infinite;
+            font-size: 22px;
+            line-height: 40px;
+            text-shadow: 0 0 6px #00ffcc;
+        }
+
+        @keyframes scrollUp {
+            0% {
+                top: 100%;
+            }
+
+            100% {
+                top: -220%;
+            }
+        }
+
+        .button {
+            margin-top: 40px;
+            padding: 15px 40px;
+            background: #00ffcc;
+            color: black;
+            font-size: 24px;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.2s;
+            text-shadow: none;
+            box-shadow: 0 0 12px #00ffcc;
+        }
+
+        .button:hover {
+            background: white;
+            color: black;
+            box-shadow: 0 0 20px white;
+        }
+
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CRT Effects -->
+    <div id="scanlines"></div>
+    <div id="vignette"></div>
+
+    <div id="creditsWrapper">
+        <div id="creditsTitle">CREDITS</div>
+
+        <div id="scrollArea">
+            <div id="creditsText">
+
+                <p>GAME DESIGN</p>
+                <p>Jackson Lester, Gabriel Murr, Tevin Lu</p>
+                <br>
+
+                <p>PROGRAMMING MVP CODERS</p>
+                <p>Jackson Lester, Gabriel Murr & assistance from Tevin Lu</p>
+                <br>
+
+                <p>ART & SPRITES</p>
+                <p>Jackson Lester & Tevin Lu</p>
+                <br>
+
+                <p>MUSIC, WRITING & SOUND</p>
+                <p>Tevin Lu</p>
+                <br>
+
+                <p>SPECIAL THANKS</p>
+                <p>Your Friends, Family, and Testers</p>
+                <br>
+
+                <p>POWERED BY</p>
+                <p>Your Custom Arcade Engine</p>
+                <br><br>
+
+                <p>THANK YOU FOR PLAYING</p>
+                <p>PRESS A BUTTON TO CONTINUE</p>
+
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <button class="button" onclick="window.location.href='index.html'">
+            Return to Main Menu
+        </button>
+
+        <button class="button" onclick="window.location.href='level4.html'">
+            New Game+
+        </button>
+    </div>
+
+
+    <script>
+
+        let bgMusic = null;
+
+        if (bgMusic) {
+            bgMusic.pause();
+            bgMusic.currentTime = 0;
+        }
+
+        bgMusic = new Audio('./assets/sounds/music/title-screen_8bit.wav');
+        bgMusic.loop = true;
+        bgMusic.volume = 0.4;
+
+        bgMusic.play().catch(error => {
+            console.error("Music failed:", error);
+        });
+
+    </script>
+
+</body>
+
+</html>

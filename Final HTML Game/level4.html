@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Level 4 - Boss 4</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared/game.css">
+
+    <style>
+        /* ───────────────────────────────
+   WRAPPER — glassy sci‑fi panel
+   ─────────────────────────────── */
+        #wrapper {
+            position: absolute;
+            inset: 0;
+            border-radius: 14px;
+            background: linear-gradient(180deg,
+                    rgba(8, 32, 44, 0.96) 0%,
+                    rgba(10, 55, 70, 0.94) 40%,
+                    rgba(6, 22, 30, 0.92) 100%);
+            box-shadow:
+                0 0 18px rgba(0, 255, 255, 0.25),
+                inset 0 0 12px rgba(0, 180, 255, 0.15);
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 25;
+            backdrop-filter: blur(2px);
+        }
+
+        /* ───────────────────────────────
+   TITLE — glowing arcade header
+   ─────────────────────────────── */
+        #wrapper h1 {
+            font-size: 2em;
+            font-family: 'Orbitron', monospace;
+            text-align: left;
+            padding: 12px 5% 6px;
+            margin: 0;
+            color: #00f6ff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+            letter-spacing: 1px;
+            flex-shrink: 0;
+        }
+
+        /* ───────────────────────────────
+   MAIN LAYOUT
+   ─────────────────────────────── */
+        #debrief-Container {
+            display: flex;
+            flex-direction: row;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+            padding: 0 10px 10px;
+            gap: 10px;
+        }
+
+        /* ───────────────────────────────
+   VISUALS PANEL
+   ─────────────────────────────── */
+        #visuals-Debrief {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            flex-shrink: 0;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.15);
+            box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.1);
+        }
+
+        #visuals-Debrief video {
+            max-width: 90%;
+            max-height: 140px;
+            object-fit: contain;
+            margin: 6px 0;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.25);
+        }
+
+        /* ───────────────────────────────
+   IMAGE STRIP
+   ─────────────────────────────── */
+        #image-Container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            padding-bottom: 4px;
+        }
+
+        #image-Container img {
+            max-width: 48%;
+            max-height: 80px;
+            object-fit: contain;
+            margin: 4px;
+            filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.25));
+        }
+
+        /* ───────────────────────────────
+   CONFIRM BUTTON — arcade style
+   ─────────────────────────────── */
+        #missionConfirmBtn {
+            text-align: center;
+            width: 70%;
+            margin: 10px auto 0;
+            background: linear-gradient(180deg, #ff0033, #b0001f);
+            border-radius: 80px;
+            padding: 8px 12px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9em;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            flex-shrink: 0;
+            text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+            transition: 0.15s ease;
+        }
+
+        #missionConfirmBtn::after {
+            content: "Mission Confirm?";
+        }
+
+        #missionConfirmBtn:hover {
+            background: linear-gradient(180deg, #00ffc8, #00a88a);
+            box-shadow: 0 0 12px rgba(0, 255, 200, 0.6);
+        }
+
+        #missionConfirmBtn:hover::after {
+            content: "Are you sure?";
+        }
+
+        /* ───────────────────────────────
+   TEXT PANEL — holo‑panel look
+   ─────────────────────────────── */
+        #text-Debrief {
+            flex: 1;
+            min-width: 0;
+            padding: 10px 14px;
+            border-radius: 8px;
+            background: linear-gradient(180deg,
+                    rgba(0, 180, 220, 0.35),
+                    rgba(0, 120, 160, 0.35));
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: inset 0 0 12px rgba(0, 255, 255, 0.15);
+            overflow-y: auto;
+            font-size: 0.92em;
+            line-height: 1.55;
+            color: #e8faff;
+        }
+
+        #text-Debrief h2 {
+            color: #00f6ff;
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.15em;
+            margin: 4px 0 10px;
+            text-shadow: 0 0 6px rgba(0, 255, 255, 0.6);
+        }
+
+        #text-Debrief p {
+            margin: 0 0 10px;
+        }
+
+        #text-Debrief a {
+            cursor: pointer;
+            color: #ff9dff;
+            font-weight: bold;
+            text-decoration: underline dotted;
+            text-shadow: 0 0 4px rgba(255, 150, 255, 0.6);
+        }
+
+        /* ───────────────────────────────
+   INFO POPUPS — holo‑cards
+   ─────────────────────────────── */
+        #additional-Info {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 999;
+            font-size: 0.78em;
+        }
+
+        #additional-Info p {
+            margin: 0;
+            position: absolute;
+            top: 28%;
+            left: 38%;
+            width: 55%;
+            border-radius: 10px;
+            padding: 10px 14px;
+            background: rgba(138, 56, 245, 0.92);
+            color: white;
+            pointer-events: none;
+            opacity: 0;
+            transform: translateY(-6px) scale(0.97);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            box-shadow:
+                0 0 12px rgba(138, 56, 245, 0.5),
+                inset 0 0 10px rgba(255, 255, 255, 0.15);
+            line-height: 1.5;
+        }
+
+        #additional-Info p.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CABINET AREA -->
+    <div id="game-area">
+
+        <img id="game-image" src="assets/images/Zoomed In Screen.png" alt="Level 3 Cabinet">
+
+        <div id="fadeOut"></div>
+
+        <div id="overlay-layer">
+            <img id="btnA" class="small-item stick-neutral" src="assets/images/buttons.png"
+                style="top: 800px; left: 500px;" alt="arcade buttons">
+            <img id="rightStick" class="small-item stick-neutral" src="./assets/images/RightStick.png"
+                style="top: 685px; left: 875px;" alt="right joystick">
+            <img id="leftStick" class="small-item stick-neutral" src="./assets/images/LeftStick.png"
+                style="top: 685px; left: 445px;" alt="left joystick">
+        </div>
+
+        <button id="homeBtn" onclick="window.location.href='index.html'">Main Menu</button>
+
+    </div>
+
+
+    <!-- FLOATING CRT WINDOW -->
+    <div id="gameWrapper">
+
+        <!-- ── MISSION DEBRIEF (shown first) ── -->
+        <div id="wrapper">
+            <h1>Thank you! <br> For Playing the Demo!</h1>
+
+            <div id="debrief-Container">
+
+                <div id="visuals-Debrief">
+                    <video autoplay loop muted src="./assets/video/space-fleet.mp4"></video>
+                    <div id="image-Container">
+                        <img src="assets/images/alien-eyes.jpeg" alt="eldritch being with many eyes">
+                        <img src="assets/images/mind-parasite.jpg" alt="tentacle eye mind parasites">
+                    </div>
+                    <button id="missionConfirmBtn" aria-label="Confirm mission and start level"
+                        onclick="window.location.href='level1.html'"></button>
+                </div>
+                <div id="text-Debrief">
+                    <h2>Essential Information:</h2>
+                    <p>This is still in development and has a lot of glitches, but thanks for bearing with us. Hoping
+                        there's more to come someday. Until then, we want to thank you for playing the demo. Until then
+                        this is basically just a glorified new game plus.
+                    </p>
+                    <!-- ── GAME HUD ── -->
+                    <div id="hudBar">
+                        <span id="scoreDisplay" style="display:none;">Score: 0</span>
+                        <span id="killDisplay" style="display:none;">Enemies: 0 / 0</span>
+                    </div>
+
+                    <!-- PLAYER HEALTH -->
+                    <div id="playerHealthBarContainer" style="display:none;">
+                        <div id="playerHealthBar"></div>
+                    </div>
+
+                    <!-- BOSS 3 HEALTH -->
+                    <div id="boss3HealthBarContainer" class="boss-health-container" style="display:none;">
+                        <div id="boss3HealthLabel" class="boss-health-label" style="color:white;">
+                            BOSS 3
+                        </div>
+                        <div class="boss-health-bar-bg" style="background-color:red;">
+                            <div id="boss3HealthBar" class="boss-health-bar-fill"
+                                style="background:#ff4444; width:100%;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CANVAS -->
+                    <canvas id="gameCanvas" width="650" height="500"></canvas>
+
+                    <!-- START OVERLAY — hidden until debrief is dismissed -->
+                    <div id="startOverlay" class="overlay" style="display:none;">
+                        <button id="startButton">Start Level 3</button>
+                    </div>
+
+                    <!-- SHOP OVERLAY -->
+                    <div id="upgradeOverlay" class="overlay" style="display:none;">
+                        <div class="upgrade-panel">
+                            <h2>Upgrade Shop</h2>
+                            <p>Buy as many upgrades as you can afford.</p>
+                            <button id="upgradeLaser">Laser</button>
+                            <button id="upgradeForcefield">Forcefield</button>
+                            <button id="upgradeBulletSpeed">Bullet Speed</button>
+                            <button id="upgradeHealth">Max Health</button>
+                            <button id="upgradeMoveSpeed">Move Speed</button>
+                            <button id="upgradeContinue">Continue to Boss</button>
+                            <p id="shopMessage" style="margin-top:10px; color:#ff8080;"></p>
+                        </div>
+                    </div>
+
+                    <div id="quizOverlay" class="overlay"
+                        style="display:none; overflow-y:auto; align-items:flex-start; padding:20px;">
+                        <div id="app">
+                            <header>
+                                <h1>Mission Review</h1>
+                            </header>
+
+                            <!-- HUD: level + remaining count -->
+                            <div id="hud">
+                                <div>LEVEL &nbsp;<span id="hudLevel">—</span></div>
+                                <div>CATEGORY &nbsp;<span id="hudCategory">—</span></div>
+                                <div>REMAINING &nbsp;<span id="hudRemaining">—</span></div>
+                            </div>
+
+                            <!-- Start / transition screen -->
+                            <div class="card" id="startScreen">
+                                <div class="level-badge" id="levelBadge">Level 3</div>
+                                <h2 class="level-title" id="levelTitle">Game Theory</h2>
+                                <p class="level-desc" id="levelDesc">"Five questions on strategic decision-making,
+                                    cooperation, and
+                                    feedback."</p>
+                                <button id="drawBtn" onclick="startOrDraw()">Begin</button>
+                            </div>
+
+                            <!-- Question screen -->
+                            <div class="card" id="questionScreen">
+                                <div class="q-meta">
+                                    <span id="qCategory"></span>
+                                    <span class="q-id" id="qId"></span>
+                                </div>
+                                <p id="questionText"></p>
+                                <div id="choicesContainer"></div>
+                                <div id="feedback"></div>
+                                <button id="nextBtn" onclick="generateQuestion()">Next Question</button>
+                                <div id="progressWrap">
+                                    <div id="progressBar"></div>
+                                </div>
+                            </div>
+
+                            <!-- End screen -->
+                            <div class="card" id="endScreen">
+                                <p class="end-title">Quiz Complete</p>
+                                <div class="end-score" id="endScore">—</div>
+                                <p class="end-label">CORRECT ANSWERS</p>
+                                <button id="restartBtn" onclick="restartGame()">Restart</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VICTORY -->
+                    <div id="victoryOverlay" class="overlay">
+                        <h1>MISSION COMPLETE</h1>
+                        <p>You defeated Boss 4!</p>
+                        <button onclick="window.location.href='level1.html'">Next Mission</button>
+                    </div>
+
+                    <!-- GAME OVER -->
+                    <div id="gameOverOverlay" class="overlay">
+                        <h1>GAME OVER</h1>
+                        <p>Your mission has failed.</p>
+                        <button id="gameOverButton">Try Again</button>
+                    </div>
+
+                </div>
+
+                <!-- ── CANVAS SETUP ── -->
+                <script>
+                    const canvas = document.getElementById("gameCanvas");
+                    const ctx = canvas.getContext("2d");
+                </script>
+
+                <!-- ── DEBRIEF LOGIC ── -->
+                <script>
+                    const wrapper = document.getElementById('wrapper');
+                    const fadeOut = document.getElementById('fadeOut');
+                    const missionConfirmBtn = document.getElementById('missionConfirmBtn');
+                    const links = document.querySelectorAll('#text-Debrief a[data-info]');
+                    const allBoxes = document.querySelectorAll('#additional-Info p');
+
+                    /* ── Dismiss debrief → reveal game start overlay ── */
+                    missionConfirmBtn.addEventListener('click', () => {
+                        wrapper.style.transition = 'opacity 0.2s ease';
+                        wrapper.style.opacity = '0';
+                        setTimeout(() => {
+                            wrapper.style.display = 'none';
+                            document.getElementById('startButton').click(); // fires game start directly
+                        }, 200);
+                    });
+                    /* ── Hide all info popups ── */
+                    function hideAll() {
+                        allBoxes.forEach(box => box.classList.remove('visible'));
+                    }
+
+                    /* ── Position popup relative to #wrapper, anchored below its link ── */
+                    function positionNearLink(popup, linkEl) {
+                        const wRect = wrapper.getBoundingClientRect();
+                        const lRect = linkEl.getBoundingClientRect();
+                        const PAD = 8;
+                        const popupW = wRect.width * 0.55;
+                        const popupH = popup.offsetHeight || 120;
+
+                        let top = lRect.bottom - wRect.top + PAD;
+                        let left = lRect.left - wRect.left;
+
+                        // Clamp right edge
+                        if (left + popupW > wRect.width - PAD) {
+                            left = wRect.width - popupW - PAD;
+                        }
+                        if (left < PAD) left = PAD;
+
+                        // Flip above link if it would overflow the bottom
+                        if (top + popupH > wRect.height - PAD) {
+                            top = lRect.top - wRect.top - popupH - PAD;
+                        }
+
+                        popup.style.top = `${top}px`;
+                        popup.style.left = `${left}px`;
+                        popup.style.width = `${popupW}px`;
+                    }
+
+                    /* ── Info link click handler ── */
+                    links.forEach(link => {
+                        link.addEventListener('click', e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+
+                            const targetId = e.currentTarget.dataset.info;
+                            const targetBox = document.getElementById(targetId);
+
+                            if (!targetBox) {
+                                console.error(`No element found with id: ${targetId}`);
+                                return;
+                            }
+
+                            const alreadyVisible = targetBox.classList.contains('visible');
+                            hideAll();
+
+                            if (!alreadyVisible) {
+                                positionNearLink(targetBox, e.currentTarget);
+                                targetBox.classList.add('visible');
+                            }
+                        });
+                    });
+
+                    /* ── Clicks inside a popup don't close it ── */
+                    allBoxes.forEach(box => {
+                        box.addEventListener('click', e => e.stopPropagation());
+                    });
+
+                    /* ── Click anywhere else closes all popups ── */
+                    document.addEventListener('click', () => hideAll());
+                </script>
+
+                <!-- ── GAME SCRIPTS ── -->
+                <script src="shared/joystick.js"></script>
+                <script src="shared/player.js"></script>
+                <script src="shared/enemies.js"></script>
+                <script src="shared/collisions.js"></script>
+                <script src="shared/weapons.js"></script>
+                <script src="shared/quiz.js"></script>
+                <script src="shared/upgrades.js"></script>
+
+
+                <!-- BOSS 3 -->
+                <script src="bosses/boss1.js"></script>
+
+                <!-- LEVEL 3 LOOP -->
+                <script src="loops/level1Loop.js"></script>
+
+</body>
+
+</html>

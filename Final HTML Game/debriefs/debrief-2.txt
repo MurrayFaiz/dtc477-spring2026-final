@@ -1,0 +1,11 @@
+Debrief 2:
+
+Game Theory is the study of The mathematical study of strategic decision-making among rational agents whose outcomes depend on each other's choices. This applies not just to video games or everyday social interactions, but an understanding of a larger complex social system of rewards, punishments, motivations, and feedback loops.
+
+A zero sum game is a game where a player must defeat all other players and compete where there can only be one winner. However, in a non-zero sum game, cooperation is not only encouraged, it often becomes necessary to succeed where there can be many different winners.
+
+John Von Neumann refers to a mixed strategy within the context of a game to refer to A strategy that randomly selects from available pure strategies according to a probability distribution, preventing opponents from predicting your moves. In other words, you pick from a variety of viable strategies without giving away one's moves. 
+
+The tragedy of the commons refers to a phenomenon in which individual users, each acting in their own self-interest, deplete a shared resource — even when doing so is against everyone's long-term collective interest. An example is a resource rich area that could be managed efficiently if utilized sustainably, but becomes a barren wasteland when individual interest overpowers collective well being.
+
+Norbert Wiener in Cybernetics: Or Control and Communication in the Animal and the Machine refers to feedback loops as Circular processes in which a system's output is fed back as input, allowing the system to self-regulate, adapt, and correct toward a goal. These need not be solely agents with motivations, but can be expanded to large social systems, ecology, and chemical systems as well.

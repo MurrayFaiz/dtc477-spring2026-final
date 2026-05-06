@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+
+    <!-- Universal CRT + Cabinet Styles -->
+    <link rel="stylesheet" href="shared/game.css">
+
+    <style>
+        /* MENU BOX (unique to index.html) */
+        #menu-box {
+            position: absolute;
+            width: 220px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 3px solid #555;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+
+            left: 50%;
+            top: 42%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: menuEnter 1s ease forwards;
+            z-index: 5;
+        }
+
+        @keyframes menuEnter {
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .menu-btn {
+            width: 150px;
+            height: 32px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.08);
+            background: #444;
+        }
+
+        /* SLIDE-IN PANELS */
+        .side-panel {
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 60%;
+            height: 100%;
+            background: rgba(20, 20, 20, 0.95);
+            border-left: 3px solid #555;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 40px;
+            transition: right 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+            color: white;
+
+            opacity: 0;
+            transform: scale(0.95);
+            z-index: 20;
+        }
+
+        .side-panel.open {
+            right: 0;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .close-btn {
+            margin-top: 20px;
+            width: 140px;
+            height: 45px;
+            background: #444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #creditsText {
+            width: 80%;
+            max-width: 600px;
+            height: 60%;
+            overflow-y: auto;
+            padding-right: 10px;
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        /* Fade overlay (unique to menu) */
+        #fade-overlay {
+            position: absolute;
+            inset: 0;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease;
+            z-index: 10;
+        }
+
+        #fade-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="game-area">
+
+        <!-- Cabinet Screen Image -->
+        <img id="game-image" src="assets/images/Main.png" alt="Main Menu Background">
+
+        <!-- Fade Transition -->
+        <div id="fade-overlay"></div>
+
+        <!-- CENTER MENU -->
+        <div id="menu-box">
+            <a class="menu-btn" id="startGame">Play</a>
+        </div>
+
+        <!-- CONTROLLER PANEL -->
+        <div id="controller-panel" class="side-panel">
+            <h2>Controller Layout</h2>
+            <img src="assets/images/controls.png" alt="Controller Layout">
+            <button class="close-btn" data-close="controller-panel">Close</button>
+        </div>
+
+        <!-- OPTIONS PANEL -->
+        <div id="options-panel" class="side-panel">
+            <h2>Options</h2>
+            <p>Volume, controls, display settings, etc. can go here.</p>
+            <button class="close-btn" data-close="options-panel">Close</button>
+        </div>
+
+        <!-- CREDITS PANEL -->
+        <div id="credits-panel" class="side-panel">
+            <h2>Credits</h2>
+            <div id="creditsText">
+                <p>Coding: Gabriel Murr, Jackson Lester, Tevin Lu</p>
+                <p>Assets: Jackson Lester, Tevin Lu</p>
+                <p>Writing & Sound Design; Tevin Lu</p>
+            </div>
+            <button class="close-btn" data-close="credits-panel">Close</button>
+        </div>
+
+    </div>
+
+    <script>
+        const fade = document.getElementById("fade-overlay");
+        const start = document.getElementById("startGame");
+
+        /* Fade-out transition for Start Game */
+        start.addEventListener("click", () => {
+            fade.classList.add("active");
+            setTimeout(() => {
+                window.location.href = "titleScreen.html";
+            }, 600);
+        });
+
+        /* Open panels */
+        document.getElementById("openController").onclick = () => {
+            document.getElementById("controller-panel").classList.add("open");
+        };
+
+        document.getElementById("openOptions").onclick = () => {
+            document.getElementById("options-panel").classList.add("open");
+        };
+
+        document.getElementById("openCredits").onclick = () => {
+            document.getElementById("credits-panel").classList.add("open");
+        };
+
+        /* Close panels */
+        document.querySelectorAll(".close-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const panelId = btn.getAttribute("data-close");
+                document.getElementById(panelId).classList.remove("open");
+            });
+        });
+    </script>
+
+</body>
+
+</html>

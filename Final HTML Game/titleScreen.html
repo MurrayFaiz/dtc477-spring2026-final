@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+    <link rel="stylesheet" href="shared/game.css">
+
+    <style>
+        /* ── Menu root — fills gameWrapper ── */
+        #menu-root {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.55);
+            border-radius: 22px;
+        }
+
+        #menu-title {
+            color: white;
+            font-family: monospace;
+            font-size: 1.4em;
+            letter-spacing: 0.12em;
+            margin: 0 0 24px;
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+        }
+
+        /* ── Menu buttons ── */
+        #menu-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-btn {
+            width: 160px;
+            height: 34px;
+            background: #222;
+            color: white;
+            border: 2px solid #555;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .menu-btn:hover {
+            transform: scale(1.07);
+            background: #333;
+        }
+
+        /* ── Slide-in side panels (contained within gameWrapper) ── */
+        .side-panel {
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 35%;
+            height: 100%;
+            background: rgba(15, 15, 15, 0.97);
+            border-left: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 28px 20px 20px;
+            box-sizing: border-box;
+            color: white;
+            font-family: monospace;
+            transition: right 0.35s ease, opacity 0.35s ease;
+            opacity: 0;
+            z-index: 20;
+            border-radius: 22px;
+        }
+
+        .side-panel.open {
+            right: 0;
+            opacity: 1;
+        }
+
+        .side-panel h2 {
+            margin: 0 0 16px;
+            font-size: 1em;
+            letter-spacing: 0.1em;
+            color: #ccc;
+        }
+
+        .side-panel img {
+            max-width: 90%;
+            max-height: 55%;
+            object-fit: contain;
+            margin-bottom: 12px;
+        }
+
+        .side-panel p {
+            font-size: 0.78em;
+            line-height: 1.6;
+            color: #aaa;
+            text-align: center;
+            margin: 0 0 12px;
+        }
+
+        #creditsText {
+            width: 90%;
+            flex: 1;
+            overflow-y: auto;
+            font-size: 0.75em;
+            line-height: 1.7;
+            color: #aaa;
+            text-align: center;
+            padding-right: 4px;
+        }
+
+        .close-btn {
+            margin-top: auto;
+            width: 110px;
+            height: 32px;
+            background: #333;
+            color: white;
+            border: 1px solid #555;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.15s ease;
+            flex-shrink: 0;
+        }
+
+        .close-btn:hover {
+            background: #444;
+        }
+
+        /* ── Fade overlay ── */
+        #fade-overlay {
+            position: absolute;
+            inset: 0;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border-radius: 22px;
+            z-index: 30;
+        }
+
+        #fade-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #titleScreen {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+        }
+
+        .side-panel {
+            z-index: 50;
+            text-align: left;
+        }
+
+        .side-panel p {
+            text-align: left;
+            width: 70%;
+        }
+
+        #credits-main {
+            font-size: 1.5em;
+        }
+
+        #code-log {
+            font-size: 1.3em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CABINET AREA -->
+    <div id="game-area">
+
+        <img id="game-image" src="assets/images/Zoomed In Screen.png" alt="Cabinet">
+
+        <div id="overlay-layer">
+            <img id="btnA" class="small-item stick-neutral" src="./assets/images/buttons.png"
+                style="top: 800px; left: 500px;" alt="arcade buttons">
+            <img id="rightStick" class="small-item stick-neutral" src="./assets/images/RightStick.png"
+                style="top: 685px; left: 875px;" alt="right joystick">
+            <img id="leftStick" class="small-item stick-neutral" src="./assets/images/LeftStick.png"
+                style="top: 685px; left: 445px;" alt="left joystick">
+        </div>
+    </div>
+
+    <!-- Controller panel -->
+    <div id="controller-panel" class="side-panel" style="z-index: 100 !important;">
+        <h2>CONTROLS AND HELP</h2>
+        <p>WASD or Arrow Keys to Move</p>
+        <p>Space Bar for Blaster</p>
+        <p>J for missile</p>
+        <p>K for mines (unlockable)</p>
+        <p>L for laser (unlockable)</p>
+        <p>Right shift for shield (unlockable)</p>
+
+        <h2>GUIDE FOR DUMMIES</h2>
+        <p>This is a game centered around surviving waves of enemies and defeating bosses. Using knowledge gained in
+            your mission debriefs, you can drastically add to your upgrade points by answering quiz questions after
+            defeating a series of enemy waves.</p>
+
+        <h2>GUIDE FOR EVEN BIGGER DUMMIES</h2>
+        <p>This is a hard game, but doable if you strategically use your weapons and grab health when needed. I
+            would have preferred you get good at the game yourself, but here is the closest thing to an easy mode.
+        </p>
+        <p>Asteroids drop health consistently, and later on Swarm Type enemies have a small chance of dropping them
+            too.</p>
+        <p>Use your Blaster for quick damage to bosses and enemies, but poor burst damage.</p>
+        <p>Use your missile to take out most weaker enemies in a single shot. Does moderate burst damage, tracks
+            enemies but also hits asteroids in the way, so you might now always hit.</p>
+        <p>Mines are used to defend against melee attackers and contact damage from asteroids and other enemies.
+            These can be creatively used to defend oneself against mobs of enemies that would otherwise kill you
+            quickly.</p>
+        <p>Shield - Makes you invulnerable for a brief period with a cooldown. Great against weak and fast enemies
+            and asteroids, but may cause unintended bouncing off of enemies. Great against powerful boss attacks and
+            swarms.</p>
+        <p>Lasers do little damage to bosses but are excellent for destroying asteroids and weak enemies in a pinch.
+            Used for when you need to clear asteroids for health or as an obstacle</p>
+        <button class="close-btn" data-close="controller-panel">Close</button>
+    </div>
+
+    <!-- Options panel -->
+    <div id="options-panel" class="side-panel">
+        <h2>OPTIONS</h2>
+        <p>Volume, controls, and display settings will be implemented in a future update. Thanks for the patience.</p>
+        <button class="close-btn" data-close="options-panel">Close</button>
+    </div>
+
+    <!-- Credits panel -->
+    <div id="credits-panel" class="side-panel">
+        <h2>CREDITS</h2>
+        <div id="creditsText">
+            <div id="credits-main">
+                <p>Coding: Gabriel Murr, Jackson Lester, Tevin Lu</p>
+                <p>Assets: Jackson Lester, Tevin Lu</p>
+                <p>Writing & Sound Design: Tevin Lu</p>
+                <p>During this project, Gabriel and Jackson worked hard to build the foundational mechanics and
+                    environment
+                    while Tevin worked on writing the Debriefs and Quiz section</p>
+                <p>Tevin's contributions to code were not as much early on, but after reworking the combat system
+                    adapted
+                    from Jackson and Gabriel's hard work, we created a great gameplay loop as a team.</p>
+                <p>It was an extremely challenging project even as a group and with help from AI, but we learned a lot
+                    from
+                    our frustrations and develop an incredibly awesome first game, I hope you enjoy it.</p>
+                <p>Assistance by ChatGPT and Claude.AI</p>
+                <p>Note from Tevin - This mostly began with solid logic steps and was mostly hand coded at first, but
+                    quickly began to become complex. We had help from AI to troubleshoot and help us write the tricky
+                    parts.
+                </p>
+            </div>
+            <div id="code-log">
+                <p>Weapons system logs:
+                    // Tevin's logs:
+                    // Weapon System + Scope & Script Rewrite structure:
+                    // https://chatgpt.com/share/69f77b42-2fa8-83e8-acff-92dbed52ec1e
+
+                    // Debugging Laser
+                    // https://chatgpt.com/share/69f77b68-df44-83e8-800e-ce3a32c6e372
+
+                    // Fixing Damage with Bosses and Crashes & Boss Damage Restructure
+                    // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
+                </p>
+
+                <p>Quiz System Logs:
+                    // Debrief integration, CSS Issues, and Debugging
+                    // https://chatgpt.com/share/69f77b97-aff8-83e8-95f8-c204ef69159b
+
+                    // Debrief panel logic & help
+                    // https://claude.ai/share/8eed04b5-3c71-4f4f-8646-890cca09dbeb
+                    // https://claude.ai/share/c010af5c-25d3-4d3f-8bc9-493a539c3891
+                    // https://claude.ai/share/6b2dc67c-814a-47f8-8c16-a0cd411de7de
+                    // https://claude.ai/share/c89d8f98-7c6b-43c4-a5b1-d725df499a10
+
+                    // Quiz Script Work
+
+                    // JS Mentor Logic
+                    // https://chatgpt.com/share/69ecfd8c-ef50-83e8-8223-88a45d76da6f
+
+                    // Formatting
+                    // https://claude.ai/share/3f42f837-13af-4547-9884-2fcee9441fb9
+
+                    // HTML5 Game Mentor Logic Steps
+                    // https://chatgpt.com/share/69ed2786-5944-83e8-b94a-6511b2a025ef
+
+                    // Generating Code Template
+                    // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
+
+                    // JS Mentor Debugging/help
+                    // https://chatgpt.com/share/69ed9510-b99c-83e8-ba90-1821edc1c267
+
+                    // Even more Debugging
+                    // https://chatgpt.com/share/69f77c4a-3904-83e8-9b20-00d72b51e0d5
+
+                    // Simplifying the Json Fetch & Randomizing the quiz questions
+                    // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
+
+                    // CSS Fixes & Fixing the quiz's DOM and overlay not loading correctly
+                    // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
+
+
+                </p>
+
+                <p>Player Script Logs:
+
+                    // Tevin - Adding Audio
+                    // https://chatgpt.com/share/69f77bf7-db08-83e8-8022-38d8d9db9522
+
+                    // Player Dying + Health Glitch/Crashing fix
+                    // https://claude.ai/share/fe9ca8e4-9d14-49e9-8ec9-214e4d23fd61
+                </p>
+
+                <p>Enemy/Asteroid Logs:
+
+                    // Tevin's Work:
+
+                    // Asteroid Split structure/debug
+                    // https://chatgpt.com/share/69f77ab8-4478-83e8-8be5-75383faa2101
+                </p>
+
+                <p>Various Gameloop, Upgrades, and Boss Mechanics Log
+
+                    // Tevin's Work:
+
+                    // Asteroid Split structure/debug
+                    // https://chatgpt.com/share/69f77ab8-4478-83e8-8be5-75383faa2101
+
+                    // https://claude.ai/share/82a4dff3-525f-4d45-b87c-a1c5ff11e7cc
+
+                    // https://claude.ai/share/82a4dff3-525f-4d45-b87c-a1c5ff11e7cc
+
+                    // https://claude.ai/share/ad5db0e3-cfc9-4751-89a2-2aaf35952e83
+
+                    // https://claude.ai/share/4e59422e-a2d9-48ef-81dc-e23180e633a4
+
+                    // https://chatgpt.com/share/69f9a70a-f7cc-8326-aa25-fea17c80c25f
+
+
+                </p>
+
+                <p>Various</p>
+                <p>// https://chatgpt.com/share/69f9a6ef-b7ec-832b-8ba4-f3d105b62746</p>
+
+            </div>
+
+            <p></p>
+        </div>
+        <button class="close-btn" data-close="credits-panel">Close</button>
+    </div>
+    <!-- CRT GAME WINDOW -->
+    <div id="gameWrapper">
+        <video id="titleScreen" src="./assets/video/redshift-titlescreenv2.mp4" autoplay loop volume=".5"></video>
+        <!-- Menu -->
+        <div id="menu-root">
+            <p id="menu-title">— Start MISSION —</p>
+            <div id="menu-box">
+                <a class="menu-btn" id="startGame">Play</a>
+                <button class="menu-btn" id="openController">Controls and Help</button>
+                <button class="menu-btn" id="openOptions">Options</button>
+                <button class="menu-btn" id="openCredits">Credits</button>
+            </div>
+        </div>
+        <!-- Fade transition -->
+        <div id="fade-overlay"></div>
+    </div>
+
+
+    <script>
+
+        let bgMusic = null;
+        document.getElementById('titleScreen').volume = 0.5;
+        const fade = document.getElementById('fade-overlay');
+        const start = document.getElementById('startGame');
+
+        /* Play — fade then navigate */
+        start.addEventListener('click', () => {
+            fade.classList.add('active');
+            setTimeout(() => {
+                window.location.href = 'level1.html';
+            }, 300);
+
+            resetProgress();
+            bgMusic = new Audio('/assets/sounds/music/debrief.mp3');
+            bgMusic.loop = true;
+            bgMusic.volume = 0.4;
+
+            bgMusic.play().catch(error => {
+                console.error("Music failed:", error);
+            });
+        });
+
+        /* Open panels */
+        document.getElementById('openController').addEventListener('click', () => {
+            document.getElementById('controller-panel').classList.add('open');
+        });
+
+        document.getElementById('openOptions').addEventListener('click', () => {
+            document.getElementById('options-panel').classList.add('open');
+        });
+
+        document.getElementById('openCredits').addEventListener('click', () => {
+            document.getElementById('credits-panel').classList.add('open');
+        });
+
+        /* Close panels */
+        document.querySelectorAll('.close-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById(btn.dataset.close).classList.remove('open');
+            });
+        });
+    </script>
+
+</body>
+
+</html>
