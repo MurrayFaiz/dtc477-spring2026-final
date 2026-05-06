@@ -36,11 +36,14 @@ document.addEventListener("keydown", e => {
     if (e.code === "ArrowUp") {
         leftStick.className = "small-item stick-forward";
     }
+    if (e.code === "ArrowDown") {
+        leftStick.className = "small-item stick-back";   // NEW
+    }
 });
 
 // Keyup events
 document.addEventListener("keyup", e => {
-    if (["ArrowLeft", "ArrowRight", "ArrowUp"].includes(e.code)) {
+    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(e.code)) {
         resetSticks();
     }
 });

@@ -1,10 +1,3 @@
-// We all worked on the code for this in different iterations (Place your chat logs here)
-
-// Tevin's Work:
-
-// Asteroid Split structure/debug
-// https://chatgpt.com/share/69f77ab8-4478-83e8-8be5-75383faa2101
-
 // =====================================================
 // ASTEROIDS + ALIENS + HEALTH PICKUPS
 // =====================================================
@@ -31,6 +24,7 @@ swarmImg.src = "assets/images/mind-parasite.gif";
 const turretDroneImg = new Image();
 turretDroneImg.src = "assets/images/sentinel.png";
 
+// GLOBAL ARRAYS (declared once here)
 let asteroids = [];
 let aliens = [];
 let healthPickups = [];
@@ -85,8 +79,8 @@ function drawAsteroids() {
     for (let a of asteroids) {
         let img =
             a.size === "large" ? asteroidLargeImg :
-                a.size === "medium" ? asteroidMediumImg :
-                    asteroidSmallImg;
+            a.size === "medium" ? asteroidMediumImg :
+            asteroidSmallImg;
 
         ctx.save();
         ctx.translate(a.x, a.y);
@@ -103,9 +97,8 @@ function splitAsteroid(a, index, damage) {
     const size = a.size;
     asteroids.splice(index, 1);
 
-    // Score
+    // Score increases (canvas HUD will display it)
     score += size === "large" ? 5 : size === "medium" ? 3 : 2;
-    document.getElementById("scoreDisplay").innerText = "Score: " + score;
 
     if (size === "large") {
         spawnAsteroid("medium", a.x, a.y);
@@ -114,8 +107,6 @@ function splitAsteroid(a, index, damage) {
         spawnAsteroid("small", a.x, a.y);
         spawnAsteroid("small", a.x, a.y);
     } else if (size === "small") {
-
-        // chance to drop health
         if (Math.random() < 0.5) {
             healthPickups.push({
                 x: a.x,
@@ -132,10 +123,7 @@ function splitAsteroid(a, index, damage) {
 // =====================================================
 
 function updateHealthPickups() {
-    for (let p of healthPickups) {
-        p.y += p.vy;
-    }
-
+    for (let p of healthPickups) p.y += p.vy;
     healthPickups = healthPickups.filter(p => p.y < canvas.height + 40);
 }
 
@@ -221,7 +209,7 @@ function drawAliens() {
 
         ctx.restore();
 
-        // Health bar (only show when damaged)
+        // Health bar
         if (a.health < ALIEN_MAX_HEALTH) {
             const barW = a.width;
             const barH = 4;
@@ -239,7 +227,7 @@ function drawAliens() {
 }
 
 // =====================================================
-// ALIEN DAMAGE HANDLER
+// ALIEN DAMAGE + DEATH
 // =====================================================
 
 function damageAlien(index, damage) {
@@ -253,25 +241,15 @@ function damageAlien(index, damage) {
     }
 }
 
-// =====================================================
-// ALIEN DEATH HANDLER
-// =====================================================
-
 function killAlien(index) {
     aliens.splice(index, 1);
 
     score += 35;
-    document.getElementById("scoreDisplay").innerText = "Score: " + score;
-
     aliensKilled++;
-    document.getElementById("killDisplay").innerText =
-        `Aliens: ${aliensKilled} / ${requiredKills}`;
 }
 
 // =====================================================
 // SWARM ENEMIES
-// Spawns in threes. Slow normally, rushes player
-// when within aggroRadius. No shooting — contact damage.
 // =====================================================
 
 const SWARM_AGRO_RADIUS = 160;
@@ -304,15 +282,12 @@ function updateSwarmEnemies() {
         const dy = player.y - cy;
         const dToPlayer = Math.hypot(dx, dy);
 
-        // Aggro check
         s.aggroed = dToPlayer < SWARM_AGRO_RADIUS;
 
         if (s.aggroed) {
-            // Rush straight toward the player
             s.vx = (dx / dToPlayer) * SWARM_FAST_SPEED;
             s.vy = (dy / dToPlayer) * SWARM_FAST_SPEED;
         } else {
-            // Drift slowly downward with mild horizontal wander
             s.vx += (Math.random() - 0.5) * 0.1;
             s.vx = Math.max(-1, Math.min(1, s.vx));
             s.vy = SWARM_SLOW_SPEED;
@@ -321,17 +296,14 @@ function updateSwarmEnemies() {
         s.x += s.vx;
         s.y += s.vy;
 
-        // Wrap horizontally
         if (s.x < -s.width) s.x = canvas.width;
         if (s.x > canvas.width) s.x = -s.width;
 
-        // Reset if it scrolls off the bottom
         if (s.y > canvas.height + 40) {
             s.y = -40;
             s.x = Math.random() * canvas.width;
         }
 
-        // Damage cooldown tick
         if (s.damageCooldown > 0) s.damageCooldown--;
     }
 }
@@ -344,7 +316,6 @@ function drawSwarmEnemies() {
         ctx.drawImage(swarmImg, -s.width / 2, -s.height / 2, s.width, s.height);
         ctx.restore();
 
-        // Health bar (only show when damaged)
         if (s.health < SWARM_MAX_HEALTH) {
             const pct = s.health / SWARM_MAX_HEALTH;
             ctx.fillStyle = "#333";
@@ -363,20 +334,16 @@ function damageSwarm(index, damage) {
 }
 
 function killSwarm(index) {
+    const s = swarmEnemies[index];
     swarmEnemies.splice(index, 1);
 
     score += 15;
-    document.getElementById("scoreDisplay").innerText = "Score: " + score;
-
     aliensKilled++;
-    document.getElementById("killDisplay").innerText =
-        `Aliens: ${aliensKilled} / ${requiredKills}`;
 
-    // 25% chance to drop health
-    if (Math.random() < 0.25) {
+    if (Math.random() < 0.25 && s) {
         healthPickups.push({
-            x: swarmEnemies[index] ? swarmEnemies[index].x : 0,
-            y: swarmEnemies[index] ? swarmEnemies[index].y : 0,
+            x: s.x,
+            y: s.y,
             vy: 1.2,
             size: 14
         });
@@ -385,8 +352,6 @@ function killSwarm(index) {
 
 // =====================================================
 // TURRET DRONES
-// Moves slowly, shoots 4 diagonal bullets at a
-// moderate interval. Does not chase the player.
 // =====================================================
 
 const TURRET_SHOOT_INTERVAL = 110;
@@ -412,20 +377,16 @@ function updateTurretDrones() {
         t.x += t.vx;
         t.y += t.vy;
 
-        // Slow rotation for visual effect
         t.angle += 0.01;
 
-        // Wrap horizontally
         if (t.x < -t.width) t.x = canvas.width;
         if (t.x > canvas.width) t.x = -t.width;
 
-        // Reset if off bottom
         if (t.y > canvas.height + 40) {
             t.y = -50;
             t.x = Math.random() * canvas.width;
         }
 
-        // Shoot in 4 diagonal directions
         t.shootCooldown--;
         if (t.shootCooldown <= 0) {
             const cx = t.x + t.width / 2;
@@ -455,7 +416,6 @@ function drawTurretDrones() {
         ctx.drawImage(turretDroneImg, -t.width / 2, -t.height / 2, t.width, t.height);
         ctx.restore();
 
-        // Health bar (only show when damaged)
         if (t.health < TURRET_MAX_HEALTH) {
             const pct = t.health / TURRET_MAX_HEALTH;
             ctx.fillStyle = "#333";
@@ -474,12 +434,9 @@ function damageTurretDrone(index, damage) {
 }
 
 function killTurretDrone(index) {
+    const t = turretDrones[index];
     turretDrones.splice(index, 1);
 
     score += 20;
-    document.getElementById("scoreDisplay").innerText = "Score: " + score;
-
     aliensKilled++;
-    document.getElementById("killDisplay").innerText =
-        `Aliens: ${aliensKilled} / ${requiredKills}`;
 }

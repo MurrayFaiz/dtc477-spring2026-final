@@ -121,7 +121,7 @@ document.addEventListener("keydown", e => {
     }
 
     // FORCEFIELD
-    if (unlockForcefield === true && e.code === "ShiftRight") {
+    if (unlockForcefield === true && e.code === "KeyF") {
         const now = Date.now();
         if (now - lastForcefieldTime > 5000) {
             spawnWeapon("forcefield", {
@@ -135,7 +135,7 @@ document.addEventListener("keydown", e => {
         }
     }
 
-    if (homingMissile === true && e.code === "KeyJ") {
+    if (homingMissile === true && e.code === "KeyM") {
         console.log("missile key hit");
         const now = Date.now();
         if (now - lastMissileTime > 1500) {

@@ -1,11 +1,5 @@
-// Tevin - Adding Audio 
-// https://chatgpt.com/share/69f77bf7-db08-83e8-8022-38d8d9db9522
-
-// Tevin - background music Debugging
-//https://chatgpt.com/share/69f77c2d-2580-83e8-b4e7-831be22df362
-
 // =====================================================
-// LEVEL 2 — Unified Loop (Matches Level 1 Architecture)
+// LEVEL 2 — Unified Loop 
 // =====================================================
 
 let gameState = "start";
@@ -13,24 +7,26 @@ let currentWave = 1;
 let requiredKills = 0;
 let aliensKilled = 0;
 let score = 0;
-let level2QuizTriggered = false;
 let bgMusic = null;
 
+let kills = 0;
+let totalEnemies = 0;
+let currentBoss = null;
+
+// Reset music if needed
 if (bgMusic) {
     bgMusic.pause();
     bgMusic.currentTime = 0;
 }
 
+// Prepare debrief music (do NOT autoplay)
 bgMusic = new Audio('./assets/sounds/music/debrief.mp3');
 bgMusic.loop = true;
 bgMusic.volume = 0.4;
 
-bgMusic.play().catch(error => {
-    console.error("Music failed:", error);
-});
-
+// Background image
 const bgImage = new Image();
-bgImage.src = "./assets/images/background.png"
+bgImage.src = "assets/images/background.png";
 
 function drawBackgroundCover(ctx, img, canvas) {
     const canvasRatio = canvas.width / canvas.height;
@@ -53,8 +49,6 @@ function drawBackgroundCover(ctx, img, canvas) {
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 }
 
-let currentBoss = null;
-
 // Timers
 let alienTrickleTimer = 0;
 let aliensSpawnedThisWave = 0;
@@ -67,6 +61,14 @@ let asteroidsSpawnedThisWave = 0;
 
 document.getElementById("startButton").addEventListener("click", () => {
     document.getElementById("startOverlay").style.display = "none";
+
+    // Switch to level 2 enemy music on user interaction
+    bgMusic.pause();
+    bgMusic = new Audio('./assets/sounds/music/level-2-enemy.mp3');
+    bgMusic.loop = true;
+    bgMusic.volume = 0.3;
+    bgMusic.play().catch(err => console.log("Music failed:", err));
+
     startLevel2();
 });
 
@@ -79,45 +81,21 @@ document.getElementById("gameOverButton").addEventListener("click", () => {
 // =====================================================
 
 function startLevel2() {
-    level2QuizTriggered = false;
     loadUpgrades();
-
-    // DEBUG LOG
-    console.log("=== LOADED UPGRADES ===");
-    console.log("upgrades.mine:", upgrades.mine);
-    console.log("Global 'mine':", mine);
-    console.log("localStorage:", localStorage.getItem("arcade_upgrades"));
-
     applyUpgradesToPlayer();
 
-    // DEBUG LOG AFTER APPLY
-    console.log("=== AFTER APPLY ===");
-    console.log("Global 'mine' after apply:", mine);
-
+    // Weapon flags based on upgrades
     mine = !!upgrades.mine;
-    console.log("FORCED SYNC: mine =", mine);
-    upgrades.spreadShot = false;
-    upgrades.drone = false;
+    homingMissile = !!upgrades.missile;
+
+    // Level 2 starts without these until shop
+    upgrades.spreadShot = !!upgrades.spreadShot;
+    upgrades.drone = !!upgrades.drone;
 
     playerInit();
     startWavePhase2();
     gameLoop2();
 
-    if (bgMusic) {
-        bgMusic.pause();
-        bgMusic.currentTime = 0;
-    }
-
-    bgMusic = new Audio('./assets/sounds/music/level-2-enemy.mp3');
-    bgMusic.loop = true;
-    bgMusic.volume = 0.3;
-
-    bgMusic.play().catch(error => {
-        console.error("Music failed:", error);
-    });
-
-    document.getElementById("scoreDisplay").style.display = "inline-block";
-    document.getElementById("killDisplay").style.display = "inline-block";
     document.getElementById("playerHealthBarContainer").style.display = "block";
 }
 
@@ -130,6 +108,7 @@ function startWavePhase2() {
     currentWave = 1;
     aliensKilled = 0;
     score = 0;
+    totalEnemies = 0;
 
     spawnWaveLevel2(currentWave);
 }
@@ -140,12 +119,9 @@ function spawnWaveLevel2(wave) {
     asteroidsSpawnedThisWave = 0;
     swarmEnemies = [];
 
-    if (wave === 1) { requiredKills = 7; spawnWave2_1(); }
+    if (wave === 1) { requiredKills = 7;  spawnWave2_1(); }
     if (wave === 2) { requiredKills = 15; spawnWave2_2(); }
     if (wave === 3) { requiredKills = 20; spawnWave2_3(); }
-
-    document.getElementById("killDisplay").innerText =
-        `Aliens: ${aliensKilled} / ${requiredKills}`;
 }
 
 function spawnWave2_1() {
@@ -183,12 +159,14 @@ function gameLoop2() {
     if (gameState === "enemyState" || gameState === "bossState") {
         update2();
         draw2();
+        drawHUD();
         requestAnimationFrame(gameLoop2);
         return;
     }
 
     if (gameState === "bossIntro") {
         draw2();
+        drawHUD();
         requestAnimationFrame(gameLoop2);
         return;
     }
@@ -222,21 +200,19 @@ function update2() {
         enemyCollisions();
         playerCollisions();
 
-        document.getElementById("scoreDisplay").innerText = "Score: " + score;
-
         // Alien trickle
         alienTrickleTimer++;
 
-        if (currentWave === 1 && aliensSpawnedThisWave < 7 && alienTrickleTimer > 90) { spawnAlien(); aliensSpawnedThisWave++; alienTrickleTimer = 0; }
+        if (currentWave === 1 && aliensSpawnedThisWave < 7  && alienTrickleTimer > 90) { spawnAlien(); aliensSpawnedThisWave++; alienTrickleTimer = 0; }
         if (currentWave === 2 && aliensSpawnedThisWave < 15 && alienTrickleTimer > 70) { spawnAlien(); aliensSpawnedThisWave++; alienTrickleTimer = 0; }
         if (currentWave === 3 && aliensSpawnedThisWave < 20 && alienTrickleTimer > 60) { spawnAlien(); aliensSpawnedThisWave++; alienTrickleTimer = 0; }
 
         // Asteroid trickle
         asteroidTrickleTimer++;
 
-        if (currentWave === 1 && asteroidsSpawnedThisWave < 6 && asteroidTrickleTimer > 120) { spawnAsteroid("large"); asteroidsSpawnedThisWave++; asteroidTrickleTimer = 0; }
-        if (currentWave === 2 && asteroidsSpawnedThisWave < 8 && asteroidTrickleTimer > 100) { spawnAsteroid("large"); asteroidsSpawnedThisWave++; asteroidTrickleTimer = 0; }
-        if (currentWave === 3 && asteroidsSpawnedThisWave < 10 && asteroidTrickleTimer > 90) { spawnAsteroid("large"); asteroidsSpawnedThisWave++; asteroidTrickleTimer = 0; }
+        if (currentWave === 1 && asteroidsSpawnedThisWave < 6  && asteroidTrickleTimer > 120) { spawnAsteroid("large"); asteroidsSpawnedThisWave++; asteroidTrickleTimer = 0; }
+        if (currentWave === 2 && asteroidsSpawnedThisWave < 8  && asteroidTrickleTimer > 100) { spawnAsteroid("large"); asteroidsSpawnedThisWave++; asteroidTrickleTimer = 0; }
+        if (currentWave === 3 && asteroidsSpawnedThisWave < 10 && asteroidTrickleTimer > 90)  { spawnAsteroid("large"); asteroidsSpawnedThisWave++; asteroidTrickleTimer = 0; }
 
         // Wave progression
         if (aliensKilled >= requiredKills) {
@@ -248,20 +224,13 @@ function update2() {
             weapons.active = [];
             explosions = [];
 
-            if (!level2QuizTriggered) {
-                level2QuizTriggered = true;
-
-                if (currentWave < 3) {
-                    currentWave++;
-                    spawnWaveLevel2(currentWave);
-                    level2QuizTriggered = false;
-                } else {
-
-                    quiz();
-                }
+            if (currentWave < 3) {
+                currentWave++;
+                spawnWaveLevel2(currentWave);
+            } else {
+                showUpgradeOverlay2();
             }
         }
-
     }
 
     if (gameState === "bossState") {
@@ -315,17 +284,27 @@ function draw2() {
 }
 
 // =====================================================
-// QUIZ — opens quiz then feeds into shop
+// CANVAS HUD
 // =====================================================
 
-function quiz() {
-    quizCompleteCallback = showUpgradeOverlay2;
-    resetQuiz(1);
-    document.getElementById("quizOverlay").style.display = "flex";
+function drawHUD() {
+    ctx.save();
+    ctx.font = "20px 'Orbitron', monospace";
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
+
+    ctx.strokeText(`Score: ${score}`, 20, 30);
+    ctx.fillText(`Score: ${score}`, 20, 30);
+
+    ctx.strokeText(`Enemies: ${aliensKilled} / ${requiredKills}`, 20, 60);
+    ctx.fillText(`Enemies: ${aliensKilled} / ${requiredKills}`, 20, 60);
+
+    ctx.restore();
 }
 
 // =====================================================
-// SHOP
+// SHOP 
 // =====================================================
 
 function showUpgradeOverlay2() {
@@ -339,47 +318,40 @@ function trySpend2(cost, applyUpgrade) {
     if (score >= cost) {
         score -= cost;
 
-        document.getElementById("scoreDisplay").innerText =
-            "Score: " + score;
-
         const msg = applyUpgrade();
-
         saveUpgrades();
 
         document.getElementById("shopMessage").innerText = msg || "";
-
-        // Refresh button labels after purchase
         setupShopUI2();
-
     } else {
-        document.getElementById("shopMessage").innerText =
-            "Not enough points!";
+        document.getElementById("shopMessage").innerText = "Not enough points!";
     }
 }
 
 function setupShopUI2() {
 
-    const btnLaser = document.getElementById("upgradeLaser");
-    const btnForcefield = document.getElementById("upgradeForcefield");
+    const btnDronePath = document.getElementById("upgradeLaser");        // repurposed
+    const btnMissilePath = document.getElementById("upgradeForcefield"); // repurposed
     const btnBulletSpeed = document.getElementById("upgradeBulletSpeed");
     const btnHealth = document.getElementById("upgradeHealth");
     const btnMoveSpeed = document.getElementById("upgradeMoveSpeed");
 
     // =====================================================
-    // LASER / MINE PATH
+    // DRONE PATH (replaces Laser path)
+    // Mine → Drone → Spread Shot
     // =====================================================
 
     if (!upgrades.mine) {
-        btnLaser.innerText = "Mine — Discounted (300)";
-    } else if (!upgrades.unlockLaser) {
-        btnLaser.innerText = "Laser (250)";
+        btnDronePath.innerText = "Mine — Discounted (300)";
+    } else if (!upgrades.drone) {
+        btnDronePath.innerText = "Drone Companion (500)";
     } else if (!upgrades.spreadShot) {
-        btnLaser.innerText = "Spread Shot (1000)";
+        btnDronePath.innerText = "Spread Shot (1000)";
     } else {
-        btnLaser.innerText = "No more Upgrades Left!";
+        btnDronePath.innerText = "No more Upgrades Left!";
     }
 
-    btnLaser.onclick = () => {
+    btnDronePath.onclick = () => {
 
         if (!upgrades.mine) {
 
@@ -389,12 +361,11 @@ function setupShopUI2() {
                 return "Mine Obtained! (Discounted)";
             });
 
-        } else if (!upgrades.unlockLaser) {
+        } else if (!upgrades.drone) {
 
             trySpend2(500, () => {
-                upgrades.unlockLaser = true;
-                unlockLaser = true;
-                return "Laser Obtained!";
+                upgrades.drone = true;
+                return "Drone Companion Obtained!";
             });
 
         } else if (!upgrades.spreadShot) {
@@ -405,47 +376,42 @@ function setupShopUI2() {
             });
 
         } else {
-            document.getElementById("shopMessage").innerText =
-                "Already purchased!";
+            document.getElementById("shopMessage").innerText = "Already purchased!";
         }
     };
 
     // =====================================================
-    // FORCEFIELD PATH
+    // MISSILE PATH (replaces Forcefield path)
+    // Missile → Missile II
     // =====================================================
 
-    if (!upgrades.unlockForcefield) {
-        btnForcefield.innerText = "Forcefield (500)";
-
-    } else if (!upgrades.drone) {
-        btnForcefield.innerText = "Drone Companion (1500)";
-
+    if (!upgrades.missile) {
+        btnMissilePath.innerText = "Missile System (500)";
+    } else if (!upgrades.missileLevel2) {
+        btnMissilePath.innerText = "Missile System II (1200)";
     } else {
-        btnForcefield.innerText = "No more Upgrades Left!";
+        btnMissilePath.innerText = "Missile System MAXED";
     }
 
-    btnForcefield.onclick = () => {
+    btnMissilePath.onclick = () => {
 
-        if (!upgrades.unlockForcefield) {
+        if (!upgrades.missile) {
 
             trySpend2(500, () => {
-                upgrades.unlockForcefield = true;
-                unlockForcefield = true;
-
-                return "Forcefield Obtained!";
+                upgrades.missile = true;
+                homingMissile = true; // enable missile key firing
+                return "Missile System Obtained!";
             });
 
-        } else if (!upgrades.drone) {
+        } else if (!upgrades.missileLevel2) {
 
-            trySpend2(1500, () => {
-                upgrades.drone = true;
-
-                return "Drone Companion Obtained!";
+            trySpend2(1200, () => {
+                upgrades.missileLevel2 = true;
+                return "Missile System II Obtained!";
             });
 
         } else {
-            document.getElementById("shopMessage").innerText =
-                "Already purchased!";
+            document.getElementById("shopMessage").innerText = "Already purchased!";
         }
     };
 
@@ -455,10 +421,8 @@ function setupShopUI2() {
 
     if (!upgrades.bulletSpeedLevel2) {
         btnBulletSpeed.innerText = "Bullet Speed II (500)";
-
     } else if (!upgrades.bulletSpeedLevel3) {
         btnBulletSpeed.innerText = "Bullet Speed III (1000)";
-
     } else {
         btnBulletSpeed.innerText = "Bullet Speed MAXED";
     }
@@ -468,30 +432,23 @@ function setupShopUI2() {
         if (!upgrades.bulletSpeedLevel2) {
 
             trySpend2(500, () => {
-
                 bulletSpeedBonus += 3;
-
                 upgrades.bulletSpeedBonus = bulletSpeedBonus;
                 upgrades.bulletSpeedLevel2 = true;
-
                 return "Bullet Speed II Purchased!";
             });
 
         } else if (!upgrades.bulletSpeedLevel3) {
 
             trySpend2(1000, () => {
-
                 bulletSpeedBonus += 5;
-
                 upgrades.bulletSpeedBonus = bulletSpeedBonus;
                 upgrades.bulletSpeedLevel3 = true;
-
                 return "Bullet Speed III Purchased!";
             });
 
         } else {
-            document.getElementById("shopMessage").innerText =
-                "Already purchased!";
+            document.getElementById("shopMessage").innerText = "Already purchased!";
         }
     };
 
@@ -501,10 +458,8 @@ function setupShopUI2() {
 
     if (!upgrades.healthLevel2) {
         btnHealth.innerText = "Max Health II (500)";
-
     } else if (!upgrades.healthLevel3) {
         btnHealth.innerText = "Max Health III (1000)";
-
     } else {
         btnHealth.innerText = "Health MAXED";
     }
@@ -514,42 +469,27 @@ function setupShopUI2() {
         if (!upgrades.healthLevel2) {
 
             trySpend2(500, () => {
-
                 playerMaxHealth += 2;
                 player.playerHealth = playerMaxHealth;
-
-                upgrades.playerMaxHealthBonus =
-                    playerMaxHealth - 5;
-
+                upgrades.playerMaxHealthBonus = playerMaxHealth - 5;
                 upgrades.healthLevel2 = true;
-
-                document.getElementById("playerHealthBar").style.width =
-                    "100%";
-
+                document.getElementById("playerHealthBar").style.width = "100%";
                 return "Health II Purchased!";
             });
 
         } else if (!upgrades.healthLevel3) {
 
             trySpend2(1000, () => {
-
                 playerMaxHealth += 3;
                 player.playerHealth = playerMaxHealth;
-
-                upgrades.playerMaxHealthBonus =
-                    playerMaxHealth - 5;
-
+                upgrades.playerMaxHealthBonus = playerMaxHealth - 5;
                 upgrades.healthLevel3 = true;
-
-                document.getElementById("playerHealthBar").style.width =
-                    "100%";
-
+                document.getElementById("playerHealthBar").style.width = "100%";
                 return "Health III Purchased!";
             });
 
         } else {
-            document.getElementById("shopMessage").innerText =
-                "Already purchased!";
+            document.getElementById("shopMessage").innerText = "Already purchased!";
         }
     };
 
@@ -559,10 +499,8 @@ function setupShopUI2() {
 
     if (!upgrades.moveSpeedLevel2) {
         btnMoveSpeed.innerText = "Move Speed II (500)";
-
     } else if (!upgrades.moveSpeedLevel3) {
         btnMoveSpeed.innerText = "Move Speed III (1000)";
-
     } else {
         btnMoveSpeed.innerText = "Move Speed MAXED";
     }
@@ -572,47 +510,31 @@ function setupShopUI2() {
         if (!upgrades.moveSpeedLevel2) {
 
             trySpend2(500, () => {
-
                 playerSpeedBonus += 1;
-
                 player.speed = 4 + playerSpeedBonus;
-
                 upgrades.playerSpeedBonus = playerSpeedBonus;
-
                 upgrades.moveSpeedLevel2 = true;
-
                 return "Move Speed II Purchased!";
             });
 
         } else if (!upgrades.moveSpeedLevel3) {
 
             trySpend2(1000, () => {
-
                 playerSpeedBonus += 2;
-
                 player.speed = 4 + playerSpeedBonus;
-
                 upgrades.playerSpeedBonus = playerSpeedBonus;
-
                 upgrades.moveSpeedLevel3 = true;
-
                 return "Move Speed III Purchased!";
             });
 
         } else {
-            document.getElementById("shopMessage").innerText =
-                "Already purchased!";
+            document.getElementById("shopMessage").innerText = "Already purchased!";
         }
     };
 
-    // =====================================================
     // CONTINUE
-    // =====================================================
-
     document.getElementById("upgradeContinue").onclick = () => {
-
         document.getElementById("upgradeOverlay").style.display = "none";
-
         transitionToBoss2();
     };
 }
@@ -624,6 +546,7 @@ function setupShopUI2() {
 function transitionToBoss2() {
     gameState = "bossIntro";
     const bar = document.getElementById("boss2HealthBarContainer");
+
     if (bgMusic) {
         bgMusic.pause();
         bgMusic.currentTime = 0;

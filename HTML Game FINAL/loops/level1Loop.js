@@ -1,11 +1,5 @@
-// Tevin - Adding Audio 
-// https://chatgpt.com/share/69f77bf7-db08-83e8-8022-38d8d9db9522
-
-// Tevin - background music Debugging
-//https://chatgpt.com/share/69f77c2d-2580-83e8-b4e7-831be22df362
-
 // =====================================================
-// LEVEL 1 — Unified Loop
+// LEVEL 1 — Unified Loop 
 // =====================================================
 
 let gameState = "start";
@@ -13,24 +7,26 @@ let currentWave = 1;
 let requiredKills = 0;
 let aliensKilled = 0;
 let score = 0;
-let level1QuizTriggered = false;
 let bgMusic = null;
 
+let kills = 0;
+let totalEnemies = 0;
+let currentBoss = null;
+
+// Reset music if needed
 if (bgMusic) {
     bgMusic.pause();
     bgMusic.currentTime = 0;
 }
 
+// DO NOT autoplay here — Chrome blocks it
 bgMusic = new Audio('./assets/sounds/music/debrief.mp3');
 bgMusic.loop = true;
 bgMusic.volume = 0.4;
 
-bgMusic.play().catch(error => {
-    console.error("Music failed:", error);
-});
-
+// Load background image
 const bgImage = new Image();
-bgImage.src = "./assets/images/background.png"
+bgImage.src = "assets/images/background.png";
 
 function drawBackgroundCover(ctx, img, canvas) {
     const canvasRatio = canvas.width / canvas.height;
@@ -53,8 +49,6 @@ function drawBackgroundCover(ctx, img, canvas) {
     ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
 }
 
-let currentBoss = null;
-
 // Timers
 let alienTrickleTimer = 0;
 let aliensSpawnedThisWave = 0;
@@ -67,6 +61,14 @@ let asteroidsSpawnedThisWave = 0;
 
 document.getElementById("startButton").addEventListener("click", () => {
     document.getElementById("startOverlay").style.display = "none";
+
+    // Music is allowed here (user interaction)
+    bgMusic.pause();
+    bgMusic = new Audio('./assets/sounds/music/level-1-enemy.mp3');
+    bgMusic.loop = true;
+    bgMusic.volume = 0.4;
+    bgMusic.play().catch(err => console.log("Music failed:", err));
+
     startLevel1();
 });
 
@@ -79,8 +81,6 @@ document.getElementById("gameOverButton").addEventListener("click", () => {
 // =====================================================
 
 function startLevel1() {
-    // Reset the flag when starting a new level
-    level1QuizTriggered = false;
 
     applyUpgradesToPlayer();
 
@@ -88,21 +88,6 @@ function startLevel1() {
     startWavePhase1();
     gameLoop1();
 
-    if (bgMusic) {
-        bgMusic.pause();
-        bgMusic.currentTime = 0;
-    }
-
-    bgMusic = new Audio('./assets/sounds/music/level-1-enemy.mp3');
-    bgMusic.loop = true;
-    bgMusic.volume = 0.4;
-
-    bgMusic.play().catch(error => {
-        console.error("Music failed:", error);
-    });
-
-    document.getElementById("scoreDisplay").style.display = "inline-block";
-    document.getElementById("killDisplay").style.display = "inline-block";
     document.getElementById("playerHealthBarContainer").style.display = "block";
 }
 
@@ -116,6 +101,8 @@ function startWavePhase1() {
     aliensKilled = 0;
     score = 0;
 
+    totalEnemies = 0;
+
     spawnWaveLevel1(currentWave);
 }
 
@@ -127,9 +114,6 @@ function spawnWaveLevel1(wave) {
     if (wave === 1) { requiredKills = 5; spawnWave1(); }
     if (wave === 2) { requiredKills = 10; spawnWave2(); }
     if (wave === 3) { requiredKills = 15; spawnWave3(); }
-
-    document.getElementById("killDisplay").innerText =
-        `Aliens: ${aliensKilled} / ${requiredKills}`;
 }
 
 function spawnWave1() {
@@ -161,12 +145,14 @@ function gameLoop1() {
     if (gameState === "enemyState" || gameState === "bossState") {
         update1();
         draw1();
+        drawHUD();
         requestAnimationFrame(gameLoop1);
         return;
     }
 
     if (gameState === "bossIntro") {
         draw1();
+        drawHUD();
         requestAnimationFrame(gameLoop1);
         return;
     }
@@ -201,8 +187,6 @@ function update1() {
         enemyCollisions();
         playerCollisions();
 
-        document.getElementById("scoreDisplay").innerText = "Score: " + score;
-
         // Alien trickle
         alienTrickleTimer++;
 
@@ -226,17 +210,11 @@ function update1() {
             weapons.active = [];
             explosions = [];
 
-            // ONLY trigger quiz if we haven't already
-            if (!level1QuizTriggered) {
-                level1QuizTriggered = true;
-
-                if (currentWave < 3) {
-                    currentWave++;
-                    spawnWaveLevel1(currentWave);
-                    level1QuizTriggered = false;
-                } else {
-                    quiz();
-                }
+            if (currentWave < 3) {
+                currentWave++;
+                spawnWaveLevel1(currentWave);
+            } else {
+                showUpgradeOverlay1();
             }
         }
     }
@@ -289,18 +267,28 @@ function draw1() {
 }
 
 // =====================================================
-// SHOP
+// CANVAS HUD
 // =====================================================
 
-function quiz() {
-    quizCompleteCallback = showUpgradeOverlay1;
-    resetQuiz(0);
-    document.getElementById("quizOverlay").style.display = "flex";
-    const overlay = document.getElementById("quizOverlay");
-    if (overlay) {
-        overlay.style.display = "flex";
-    }
+function drawHUD() {
+    ctx.save();
+    ctx.font = "20px 'Orbitron', monospace";
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
+
+    ctx.strokeText(`Score: ${score}`, 20, 30);
+    ctx.fillText(`Score: ${score}`, 20, 30);
+
+    ctx.strokeText(`Enemies: ${aliensKilled} / ${requiredKills}`, 20, 60);
+    ctx.fillText(`Enemies: ${aliensKilled} / ${requiredKills}`, 20, 60);
+
+    ctx.restore();
 }
+
+// =====================================================
+// SHOP 
+// =====================================================
 
 function showUpgradeOverlay1() {
     gameState = "upgradeState";
@@ -312,7 +300,6 @@ function showUpgradeOverlay1() {
 function trySpend1(cost, applyUpgrade) {
     if (score >= cost) {
         score -= cost;
-        document.getElementById("scoreDisplay").innerText = "Score: " + score;
         const msg = applyUpgrade();
         saveUpgrades();
         document.getElementById("shopMessage").innerText = msg || "";
@@ -320,6 +307,7 @@ function trySpend1(cost, applyUpgrade) {
         document.getElementById("shopMessage").innerText = "Not enough points!";
     }
 }
+
 function setupShopUI1() {
 
     document.getElementById("upgradeLaser").onclick = () => {
@@ -336,7 +324,6 @@ function setupShopUI1() {
         });
     };
 
-    // Update button label to reflect mine
     const mineBtn = document.getElementById("upgradeLaser");
     mineBtn.innerText = upgrades.mine ? "Mine — Already Purchased" : "Mine (400)";
 
@@ -399,7 +386,7 @@ function setupShopUI1() {
 
 document.getElementById("upgradeContinue").onclick = () => {
     document.getElementById("upgradeOverlay").style.display = "none";
-    transitionToBoss1()
+    transitionToBoss1();
 };
 
 // =====================================================

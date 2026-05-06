@@ -45,7 +45,7 @@ function playerCollisions() {
         }
     }
 
-    // Swarm Enemies
+    // SWARM ENEMIES
     let swarmDamageThisFrame = 0;
     for (let i = swarmEnemies.length - 1; i >= 0; i--) {
         const s = swarmEnemies[i];
@@ -66,11 +66,10 @@ function playerCollisions() {
             // Heal player
             player.playerHealth = Math.min(player.playerHealth + 1, playerMaxHealth);
 
-            // Update UI
+            // Update UI bar only (this element exists)
             const percent = (player.playerHealth / playerMaxHealth) * 100;
             document.getElementById("playerHealthBar").style.width = percent + "%";
 
-            // Remove pickup
             healthPickups.splice(i, 1);
         }
     }
@@ -90,8 +89,6 @@ function enemyCollisions() {
         for (let w of weapons.active) {
             if (dist(ax, ay, w.x, w.y) < 25) {
                 damageAlien(i, w.damage || 1);
-                score += 0;
-                document.getElementById("scoreDisplay").innerText = "Score: " + score;
                 break;
             }
         }
